@@ -99,3 +99,12 @@
 - **관련 커밋**: a401779, ac98391, 4ef6989, 20fa9b6
 - **상태**: [구현됨](로컬 git까지만. GitHub 원격 저장소는 `gh auth login` 인증이 필요해 사용자 몫으로 남김)
 - **관련 항목**: DEC-004, DEC-008
+
+## DEV-20260720-12: GitHub 원격 저장소 생성 및 푸시 완료
+
+- **일시**: 2026-07-20
+- **한 일**: 사용자가 VS Code 재시작 후 `gh auth login`을 직접 완료(계정 myth-PARK). 인증 확인 후 `gh repo create prsti_hub --public --source=. --remote=origin --push`로 원격 저장소 생성과 첫 푸시를 함께 수행. 커밋 5개(초기자료·하네스·루브릭문서·README·기록)가 그대로 반영됨.
+- **산출물**: https://github.com/myth-PARK/prsti_hub (public)
+- **관련 커밋**: 17fc9d9까지 전체
+- **상태**: [구현됨]
+- **관련 항목**: DEC-008
