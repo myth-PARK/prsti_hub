@@ -1,0 +1,349 @@
+# PRSTI 루브릭 — Phase 0 초안
+# 상태: draft (사용자 승인 전. area weight/proposed_weight는 전부 null)
+# 근거: 최아리 외(2026), 한국회계학회지 35(3), 표6~8
+# 이 파일의 항목별 판정기준 서술은 docs/scoring-methodology.md에서 가져온 것이며,
+# 그 문서가 "왜 이 기준인가"의 설명을 담고 있다. 이 파일은 기계가 읽는 축약판이다.
+
+rubric_version: "0.1-draft"
+status: "draft"
+scale_note: >
+  0/1/2점 척도는 PRSTI가 새로 설계한 것이며 논문 표10의 ○(1)/△(0.5)/✕(0) 실증채점
+  척도를 그대로 이식한 것이 아니다. docs/scoring-methodology.md 상단 참고.
+
+# 2026-07-20 사용자 확정 사항(decision-log.md DEC-002/005/006/007 참고). 배점(weight)은 여전히 미확정.
+confirmed_decisions:
+  - "영역 구조는 논문 원 카테고리(가/나/다/라+조건부+권장)를 그대로 채택 (DEC-002)"
+  - "논문 미출처 3항목(PRS명칭·공시위치·진성매각판단)은 채점 항목에서 제외 유지 (DEC-006)"
+  - "조건부 필수항목의 '조건 비해당 명시'는 auto_max(만점) 처리 (DEC-005)"
+  - "발행회사 자신의 공시만 근거로 인정, 신용평가사 등 제3자 분석 자료는 불인정 (DEC-007)"
+
+areas:
+  - id: "가"
+    name: "기본 거래 정보"
+    weight: null   # 미확정 — rubric_gaps.md #1
+    items: ["필수-01", "필수-02", "필수-03", "필수-04"]
+  - id: "나"
+    name: "정산 및 회계처리"
+    weight: null
+    items: ["필수-05", "필수-06"]
+  - id: "다"
+    name: "투명성 강화(부외부채)"
+    weight: null
+    items: ["필수-07", "필수-08", "필수-09", "필수-10", "필수-11"]
+  - id: "라"
+    name: "거래 구조 분류"
+    weight: null
+    items: ["필수-12"]
+  - id: "조건부"
+    name: "조건부 필수항목"
+    weight: null
+    items: ["조건부-01", "조건부-02", "조건부-03"]
+  - id: "권장"
+    name: "권장항목"
+    weight: null
+    items: ["권장-01", "권장-02", "권장-03", "권장-04"]
+
+items:
+  # ---------- 가. 기본 거래 정보 ----------
+  - id: "필수-01"
+    tier: "mandatory"
+    label: "계약규모"
+    source_table: "표6"
+    source_item_id: 1
+    criteria:
+      0: "계약 금액이 공시되지 않음"
+      1: "계약 금액은 명시되나 부채총계 대비 비율 등 비교 기준이 없음"
+      2: "계약상 약정 금액 + 기초자산 정보 + 부채총계(장부가) 대비 비율(별도·연결)까지 공시됨"
+    accepted_example: "논문 표2: 10개 기업 전원 계약규모 구체적 금액 확인(예: LG화학 2조원)"
+    counter_example: null
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-02"
+    tier: "mandatory"
+    label: "계약당사자"
+    source_table: "표6"
+    source_item_id: 2
+    criteria:
+      0: "거래상대방·PRS발행회사 관계 언급 없음"
+      1: "거래상대방 명칭 등 일부만 언급, SPC/금융기관 여부나 관계 설명 없음"
+      2: "거래상대방(SPC/금융기관/주관사) 명칭 + PRS발행회사 + 관계가 모두 명시됨"
+    accepted_example: null
+    counter_example: "표10: 한화솔루션·에코프로 미공시(✕), LG화학 부분공시(△)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-03"
+    tier: "mandatory"
+    label: "만기일"
+    source_table: "표6"
+    source_item_id: 3
+    criteria:
+      0: "만기 관련 언급 없음"
+      1: "계약기간(예: 3년)만 언급, 구체적 만기 연월일 없음"
+      2: "구체적 만기일(연월일)이 명시됨"
+    accepted_example: null
+    counter_example: "표10: LG화학·에코프로·효성화학·넷마블 미공시(✕)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-04"
+    tier: "mandatory"
+    label: "기초자산 상세 정보"
+    source_table: "표6"
+    source_item_id: 4
+    criteria:
+      0: "기초자산이 무엇인지 확인 불가"
+      1: "종목명만 언급, 거래 형태·거래량·발행가액 불명확"
+      2: "거래 형태 + 거래량(금액, 자본 대비 비율) + 발행가액이 모두 공시됨"
+    accepted_example: "한화솔루션(논문 부록 A1): 'Q Energy Solutions SE 보통주 2,784,293주(22.65%)를 제3자에 매각'"
+    counter_example: null
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  # ---------- 나. 정산 및 회계처리 ----------
+  - id: "필수-05"
+    tier: "mandatory"
+    label: "정산 방식"
+    source_table: "표6"
+    source_item_id: 5
+    criteria:
+      0: "정산 방식(현금/주식) 언급 없음"
+      1: "현금 정산 사실만 있고 주당 기준가·정산 시점 불명확"
+      2: "현금/주식 정산 + 주당 기준가 + 정산 시점(만기일시/분기별)이 모두 명시됨"
+    accepted_example: null
+    counter_example: null
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-06"
+    tier: "mandatory"
+    label: "회계처리 근거"
+    source_table: "표6"
+    source_item_id: 6
+    criteria:
+      0: "회계처리 방식·근거 언급 전혀 없음"
+      1: "'파생상품으로 처리'처럼 분류만 언급, K-IFRS 조항 인용이나 판단 근거 서술 없음"
+      2: "회계처리 방식 + K-IFRS 조항 인용 + 분류 판단 근거가 함께 명시됨"
+    accepted_example: "논문 표9 모범안: 'K-IFRS 제1109호(금융상품) 준용... 모회사의 IRR 보장으로 인해 실질적 차입거래 성격을 가집니다. 따라서 파생상품을 금융부채로 분류'"
+    counter_example: "표10: 두산로보틱스·금호건설 제외 8개 기업 전원 미공시(✕)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  # ---------- 다. 투명성 강화(부외부채) ----------
+  - id: "필수-07"
+    tier: "mandatory"
+    label: "부외부채 재분류 위험 명시"
+    source_table: "표6"
+    source_item_id: 7
+    criteria:
+      0: "언급 없음"
+      1: "파생상품 분류 사실만 있고 재분류 위험 서술 없음"
+      2: "'회계기준 해석 변경 시 차입성으로 재분류 가능'과 같이 재분류 가능성과 조건이 구체적으로 서술됨"
+    accepted_example: null
+    counter_example: "표10: 10개 기업 전원 미공시(✕)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-08"
+    tier: "mandatory"
+    label: "부채 분류시 영향액(정량)"
+    source_table: "표6"
+    source_item_id: 8
+    criteria:
+      0: "부채 분류 시 영향에 대한 정량 정보 없음"
+      1: "정성적으로만 영향 가능성 서술, 수치 없음"
+      2: "분류 시 부채비율 및 변화율(%p)이 장부가·연결 기준으로 정량 제시됨"
+    accepted_example: null
+    counter_example: "표10: 10개 기업 전원 미공시(✕). 논문 부록 표A3(LG화학)은 유사 형태이나 신용평가사의 외부 분석이지 자사 공시가 아니므로 근거로 인정하지 않음(2026-07-20 사용자 확정, decision-log DEC-007 — 발행회사 자신의 공시만 인정)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-09"
+    tier: "mandatory"
+    label: "PRS 발행회사 신용등급 및 재무비율"
+    source_table: "표6"
+    source_item_id: 9
+    criteria:
+      0: "신용등급·재무비율 언급 없음"
+      1: "신용등급 또는 재무비율 중 하나만 언급되거나 발행회사가 아닌 자회사 정보만 있음"
+      2: "PRS 발행회사(모회사) 기준 신용등급 + 부채비율 + 이자보상배수 등이 함께 명시됨"
+    accepted_example: null
+    counter_example: "표10: 금호건설 미공시(✕), 나머지(두산로보틱스 제외) 부분공시(△)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-10"
+    tier: "mandatory"
+    label: "셀다운(유동화 조건)"
+    source_table: "표6"
+    source_item_id: 10
+    criteria:
+      0: "셀다운 관련 언급 없음"
+      1: "가능 여부만 언급, 제약 조건(제한기간·수량) 불명확"
+      2: "가능 여부(완전가능/조건부가능/불가능) + 제약 조건이 구체적으로 명시됨"
+    accepted_example: "한화솔루션(표10 유일 ○ 사례)"
+    counter_example: "표10: 나머지 9개 기업 전원 미공시(✕). LG화학은 '셀다운 원치 않는다'는 입장을 증권사에 밝혔음에도 공시에 미반영(부록 사례2)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "필수-11"
+    tier: "mandatory"
+    label: "콜옵션 조건"
+    source_table: "표6"
+    source_item_id: 11
+    criteria:
+      0: "콜옵션(조기 정산) 관련 언급 없음"
+      1: "조기 정산 가능 사실만 있고 시점·가격기준·행사가능기간 불명확"
+      2: "조기 정산 유무 + 시점 + 가격 기준 + 행사 가능기간 연장 가능성이 모두 명시됨"
+    accepted_example: null
+    counter_example: "표10: 10개 기업 전원 미공시(✕)"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  # ---------- 라. 거래 구조 분류 ----------
+  - id: "필수-12"
+    tier: "mandatory"
+    label: "만기 시 기초자산 재매입 조건"
+    source_table: "표6"
+    source_item_id: 12
+    criteria:
+      0: "재매입 의무 관련 언급 없음"
+      1: "재매입 가능성은 언급되나 대상·가격기준·시점 중 다수가 불명확"
+      2: "재매입 의무 유무(부채성/자본성) + 대상 + 가격 + 시점이 모두 명시됨"
+    accepted_example: null
+    counter_example: "표10: 10개 기업 전원 미공시(✕) — 부채성/자본성 분류의 근간이 되는 핵심 신설 항목"
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  # ---------- 조건부 필수항목 ----------
+  - id: "조건부-01"
+    tier: "conditional"
+    label: "가격 보전 조건(PRS이자율)"
+    source_table: "표7"
+    source_item_id: 1
+    trigger_condition: "IRR 또는 최저 수익률 보장 조건이 계약에 존재할 때"
+    criteria:
+      0: "조건이 존재함에도 언급 없음"
+      1: "수익률 보장 사실만 있고 구체적 보장수익률·스프레드·지급방식 없음"
+      2: "IRR 보장여부 + 보장수익률 + 회사채 대비 스프레드(bp) + 지급방식이 모두 명시됨"
+    accepted_example: "논문 5.2.1절: '정기적으로 매년 4% 지급(PRS 이자)과 만기 일시 지급 0.8%로 병합하여 이행'"
+    counter_example: null
+    na_rule: "auto_max — 조건 비해당(가격보전조건 없음)을 명시적으로 밝힌 경우 만점 처리. 2026-07-20 사용자 확정(decision-log DEC-005)"
+    proposed_weight: null
+    status: "draft"
+
+  - id: "조건부-02"
+    tier: "conditional"
+    label: "계약체결목적 및 자금사용처"
+    source_table: "표7"
+    source_item_id: 2
+    trigger_condition: "자금사용처가 명확하고 특정 목적이 존재할 때"
+    criteria:
+      0: "목적·사용처 언급 없음"
+      1: "'재무구조 개선 목적'처럼 목적만 있고 구체적 사용처·시기 없음"
+      2: "자금 사용처(투자/채무상환/운영자금) + 사용 예정 시기가 구체적으로 명시됨"
+    accepted_example: "논문 부록 표A2(SK이노베이션 유상증자 자금 이용 결과): 채무상환/운영자금 액수 구분"
+    counter_example: null
+    na_rule: "auto_max — 조건부-01과 동일 규칙 적용. 2026-07-20 사용자 확정(decision-log DEC-005)"
+    proposed_weight: null
+    status: "draft"
+
+  - id: "조건부-03"
+    tier: "conditional"
+    label: "외부평가기관 검토 기록"
+    source_table: "표7"
+    source_item_id: 3
+    trigger_condition: "독립적 평가 또는 감사가 수행되었을 때"
+    criteria:
+      0: "평가 수행 여부 자체가 불명확"
+      1: "평가를 받았다는 사실만 있고 평가기관명·등급 없음"
+      2: "평가기관명 + 검토 내용 + 평가 등급이 모두 명시됨"
+    accepted_example: null
+    counter_example: null
+    na_rule: "auto_max — 조건부-01과 동일 규칙 적용. 2026-07-20 사용자 확정(decision-log DEC-005)"
+    proposed_weight: null
+    status: "draft"
+
+  # ---------- 권장항목 ----------
+  - id: "권장-01"
+    tier: "recommended"
+    label: "기초자산 자회사 재무 정보"
+    source_table: "표8"
+    source_item_id: 1
+    criteria:
+      0: "재무정보 없음"
+      1: "총자산·매출액·순이익·ROA 중 일부만 제시"
+      2: "총자산·매출액·순이익·ROA가 모두 제시됨"
+    accepted_example: "논문 부록 표A3·A4(LG화학·에코프로 재무지표)"
+    counter_example: null
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "권장-02"
+    tier: "recommended"
+    label: "PRS 계약 주요 조건 요약서 또는 사본"
+    source_table: "표8"
+    source_item_id: 2
+    criteria:
+      0: "요약서/사본 없음"
+      1: "부분 요약만 있음"
+      2: "요약서 또는 계약 사본이 공개됨"
+    accepted_example: null
+    counter_example: null
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "권장-03"
+    tier: "recommended"
+    label: "비교분석(PRS 이자율 비교)"
+    source_table: "표8"
+    source_item_id: 3
+    criteria:
+      0: "비교분석 없음"
+      1: "비교 대상 언급만 있고 수치 비교 없음"
+      2: "동일 산업·규모 기업과의 PRS 이자율 비교가 수치로 제시됨"
+    accepted_example: "논문 표9 모범안: '2025년 체결된 PRS 거래 57건의 PRS 이자율 평균은 7%... 본 거래는 산업 평균보다 1.3%p 높으며...'"
+    counter_example: null
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+  - id: "권장-04"
+    tier: "recommended"
+    label: "위험 정보(정량적 시나리오)"
+    source_table: "표8"
+    source_item_id: 4
+    criteria:
+      0: "시나리오 분석 없음"
+      1: "정성적 손익 구조 설명만 있음"
+      2: "주가 변동 시나리오별 손익 범위 + 부채비율 변화가 정량 제시됨"
+    accepted_example: null
+    counter_example: null
+    na_rule: null
+    proposed_weight: null
+    status: "draft"
+
+# 논문에 직접적 채점 항목으로 존재하지 않아 이 초안에서 의도적으로 제외한 후보.
+# 포함 여부는 rubric_gaps.md #4에서 사용자 결정 대기.
+excluded_candidates:
+  - label: "PRS 명칭"
+    reason: "4.2절에서 문제로만 지적, 표6~8에 채점 항목 없음"
+  - label: "공시 위치"
+    reason: "5.2.3절 '위치 표준화'는 지침의 설계 원칙이지 기업별 채점 항목이 아님"
+  - label: "진성매각 판단"
+    reason: "3.2.1절 논의와 연결되나 필수-06(회계처리 근거)의 하위 판단 요소, 독립 항목 아님"
