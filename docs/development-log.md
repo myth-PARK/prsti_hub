@@ -108,3 +108,12 @@
 - **관련 커밋**: 17fc9d9까지 전체
 - **상태**: [구현됨]
 - **관련 항목**: DEC-008
+
+## DEV-20260720-13: "AI 활용 역량"을 포트폴리오 1순위로 재확정, 로드맵 재배열
+
+- **일시**: 2026-07-20
+- **한 일**: 사용자가 채용 요구사항 "② AI 활용 역량 — 생성형 AI API/오픈소스 LLM 기반 솔루션 기획|설계|개발 경험"을 1순위로 지정. `portfolio-evidence.md`에 최상단 우선순위 선언 추가, 기획/설계/개발 3단계로 충족 여부를 정직하게 분해(기획·설계는 충족, 개발만 미충족), 요건 대조표 갱신(GitHub 존재 반영), PE-002(환각 방지 설계 STAR 사례) 추가. `prsti-harness`와 `evidence-extractor` 에이전트에 로드맵 재배열(Phase 2를 기다리지 않고 논문 인용 샘플로 evidence-extractor 우선 개발) 반영.
+- **산출물**: `docs/portfolio-evidence.md`, `.claude/skills/prsti-harness/skill.md`, `.claude/agents/evidence-extractor.md`
+- **관련 커밋**: (다음 커밋에 포함 예정)
+- **상태**: [구현됨](문서·설계 수준 — 실제 evidence-extractor 코드는 아직 다음 단계)
+- **관련 항목**: DEC-009

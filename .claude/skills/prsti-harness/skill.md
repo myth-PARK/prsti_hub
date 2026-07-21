@@ -32,8 +32,15 @@ PRSTI 프로젝트의 5개 전문 에이전트(rubric-architect, dart-researcher
 | Phase 0 (rubric-architect) | 없음 — 문서 작업이라 바로 시작 가능 |
 | Phase 1 (scoring-engine-dev, 실제 코드) | 사용자가 `rubric.yaml`을 명시적으로 승인(`status: approved`)했을 때 |
 | Phase 2 (dart-researcher) | DART API 키 확인 + 조회 대상(기업/연도) 사용자 지정. 대량 수집은 별도 승인 |
-| Phase 3 (evidence-extractor) | Phase 2 산출물 존재 + rubric.yaml 승인 |
+| Phase 3 (evidence-extractor) | 정식 경로: Phase 2 산출물 존재 + rubric.yaml 승인. **우선순위 재배열 경로(DEC-009, 아래 참고)**: Phase 2 없이도 논문 원문의 실제 인용문을 샘플 입력으로 삼아 착수 가능 — rubric.yaml 승인은 여전히 필요 |
 | Phase 4 (웹 MVP) | 이 하네스에 아직 에이전트 미정의 — Phase 0~3 안정화 후 하네스 확장 필요 |
+
+### 우선순위 재배열 (2026-07-20, DEC-009)
+
+포트폴리오 목적(채용 요구사항 "생성형 AI API 활용 개발 경험")상 evidence-extractor를 가장 먼저 실제 코드로 만드는 것이 우선순위가 됐다. 정식 데이터 의존성(Phase 1→2→3)을 어기지 않으면서 이걸 앞당기는 방법은 dart-researcher를 기다리지 않고, **이미 확보된 논문 원문의 실제 공시 인용문**(표4의 한화솔루션·SK이노베이션·롯데케미칼 "약정에 대한 설명", 표9 모범안 등)을 `_workspace/dart_*.json`과 같은 스키마로 수동 변환해 evidence-extractor의 입력으로 쓰는 것이다. 이렇게 하면:
+- dart-researcher(DART API 키 필요)를 기다리지 않고 evidence-extractor 개발·검증을 먼저 시작할 수 있다
+- 입력 원문이 실제 논문 인용문이므로 "가짜 데이터로 테스트했다"는 문제도 없다(단, "실제 DART 조회 결과가 아니라 논문 인용 샘플"이라는 점은 산출물에 항상 명시해야 한다 — evidence-extractor 에이전트의 `source_doc` 필드에 "논문 부록 표4/표9(샘플)"처럼 남긴다)
+- rubric.yaml 승인이라는 원래 게이트는 그대로 유지한다(배점 없이도 항목별 0/1/2 판정기준은 이미 있으므로 착수 가능)
 
 ## 워크플로우
 
@@ -123,6 +130,6 @@ PRSTI 프로젝트의 5개 전문 에이전트(rubric-architect, dart-researcher
 4. 재작업 후 auditor 재검증 통과
 5. 최종 보고서에는 재작업 이력이 남지 않아도 되나, `_workspace/qa_report_*.md`에는 최초 실패 기록이 보존됨(감사 추적)
 
-## 지금 시점에서 권장하는 시작 지점
+## 지금 시점에서 권장하는 시작 지점 (2026-07-20 갱신)
 
-이 하네스가 방금 만들어진 시점 기준으로, 안전하게 바로 시작할 수 있는 것은 **Phase 0(rubric-architect)뿐**이다. Phase 1~3은 사용자의 루브릭 승인, DART API 키, 대량 수집 승인 등 아직 충족되지 않은 전제조건이 있다.
+Phase 0은 핵심 쟁점 4/6이 사용자 확정을 거쳐 사실상 마무리 단계다(배점만 남음, `rubric_gaps.md` #6). **다음 우선순위는 evidence-extractor를 "우선순위 재배열 경로"로 실제 코드화하는 것**이다(DEC-009) — DART 연동이나 배점 확정을 기다릴 필요 없이, 논문 원문 인용 샘플로 착수할 수 있다. Phase 1(점수 엔진)과 Phase 2(DART 정식 연동)는 그 다음이다.
