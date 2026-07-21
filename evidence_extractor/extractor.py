@@ -17,8 +17,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+from prsti_common.rubric_loader import RubricItem, load_items
+
 from .prompts import PROMPT_VERSION, SYSTEM_PROMPT, build_user_prompt
-from .rubric_loader import RubricItem, load_rubric
 from .schema import EvidenceReport, ExtractedItem, ExtractionResult
 
 try:
@@ -133,7 +134,7 @@ def run_extraction(
     model: str = DEFAULT_MODEL,
 ) -> EvidenceReport:
     """루브릭 로드 → 추출 → 환각 검증 → EvidenceReport 저장까지 전체 파이프라인."""
-    items = load_rubric(rubric_path)
+    items = load_items(rubric_path)
     extracted = extract_evidence(
         company=company,
         source_doc=source_doc,

@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-from .rubric_loader import RubricItem
+from prsti_common.rubric_loader import RubricItem
 
 PROMPT_VERSION = "extract-v1"
 

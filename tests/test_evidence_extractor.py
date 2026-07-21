@@ -14,8 +14,8 @@ import pytest
 
 from evidence_extractor import extractor
 from evidence_extractor.prompts import build_user_prompt
-from evidence_extractor.rubric_loader import load_rubric
 from evidence_extractor.schema import ExtractedItem, ExtractionResult
+from prsti_common.rubric_loader import load_items as load_rubric
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 RUBRIC_PATH = REPO_ROOT / "rubric" / "rubric.yaml"

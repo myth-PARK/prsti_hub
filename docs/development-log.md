@@ -135,3 +135,12 @@
 - **관련 커밋**: (다음 커밋에 포함 예정)
 - **상태**: [구현됨](코드·테스트는 완성. 단, `anthropic` 미설치·API 키 미설정으로 실제 라이브 API 호출은 아직 한 번도 실행하지 못함 — mock 테스트로만 배선을 검증한 상태이며 이 한계를 숨기지 않고 명시함)
 - **관련 항목**: DEC-009, DEC-011, DEC-012
+
+## DEV-20260720-16: 무과금 개발 원칙 채택 + scoring_engine 구현(zero-cost, 실제 API 미사용)
+
+- **일시**: 2026-07-20
+- **한 일**: 사용자가 `anthropic` 패키지 설치를 승인해 실행(성공, anthropic 0.117.0). 이어서 `ANTHROPIC_API_KEY` 발급 관련 설명을 드렸으나, 사용자가 "무과금 개발 원칙으로 변경"을 명시적으로 지시(DEC-013). 이에 따라 라이브 API 검증은 보류하고, Claude API를 전혀 호출하지 않는 다음 컴포넌트인 `scoring_engine`을 실제로 구현. 리팩터링으로 `rubric_loader.py`를 `evidence_extractor` 전용에서 `prsti_common`(양쪽 컴포넌트 공유) 패키지로 이동하고 `areas` 로더(`load_areas`)를 추가. `scoring_engine/engine.py`가 `rubric.yaml`의 `scoring_formula`(항목점수=(raw/2)×proposed_weight, DEC-010)를 그대로 구현 — `confirmed_score`만 계산에 쓰고 `suggested_score`는 절대 쓰지 않음을 테스트로 강제(`test_suggested_score_is_never_used_in_calculation`). 조건부 항목의 `na_confirmed`(auto_max) 처리, 미검토 항목의 "잠정치" 표시(`is_provisional`), 권장항목의 "n/4 충족" 배지 계산까지 구현. `tests/test_scoring_engine.py` 10개 작성, 전체 테스트(evidence_extractor 12개 + scoring_engine 10개 + 로더 1개) 23개 전부 통과 확인 — **이번에는 mock이 아니라 전부 실제 실행 검증**(API를 안 쓰는 순수 로직이라 mock 자체가 필요 없음).
+- **산출물**: `prsti_common/__init__.py`, `prsti_common/rubric_loader.py`(신규, `evidence_extractor/rubric_loader.py`에서 이관+확장), `scoring_engine/__init__.py`, `scoring_engine/schema.py`, `scoring_engine/engine.py`, `scoring_engine/cli.py`, `tests/test_scoring_engine.py`, `evidence_extractor/extractor.py`·`prompts.py`(import 경로 수정), `docs/decision-log.md`(DEC-013)
+- **관련 커밋**: (다음 커밋에 포함 예정)
+- **상태**: [구현됨](scoring_engine은 실제 API 호출이 전혀 없는 컴포넌트라 "코드 완성 + 실제 실행 검증"까지 완전히 도달함 — evidence-extractor와 달리 라이브/목 구분 자체가 필요 없음)
+- **관련 항목**: DEC-013
