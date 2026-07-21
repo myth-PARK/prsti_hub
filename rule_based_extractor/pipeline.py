@@ -127,6 +127,7 @@ def score_company_from_documents(
         rubric_version=rubric_version,
         computed_at=datetime.now(timezone.utc).astimezone().isoformat(),
         items=item_results,
+        areas=scoring_result.areas,
         total_score=scoring_result.total_score,
         max_score=scoring_result.max_total_score,
         # scoring_engine 자체의 is_provisional은 "미검토 항목 존재"를 뜻하지만, 이

@@ -54,7 +54,7 @@
 | Streamlit | 계획 | MVP 웹 화면 |
 
 ## 8. 전체 시스템 아키텍처
-현재 실재하는 것: (1) 5개 에이전트(rubric-architect, dart-researcher, evidence-extractor, scoring-engine-dev, prsti-auditor) + 6개 스킬로 구성된 서브에이전트 개발 절차(`prsti-harness` 참고), (2) 실제 동작하는 파이썬 코드 5개 패키지 — `prsti_common`(rubric.yaml 공유 로더·비용 통제 설정), `dart_researcher`(DART Open API 클라이언트, 실제 조회 검증됨), `evidence_extractor`/`anthropic_extractor`(Claude API 구조화 출력 클라이언트, 선택적 비교 실험용으로 격리), `rule_based_extractor`(무료 규칙 기반 자동 채점, **기본 실행 경로**), `scoring_engine`(결정론적 점수 계산). 전체 서비스 아키텍처(웹 화면 등)는 여전히 설계 문서 수준이지만, **DART 조회부터 최종 점수 산출까지의 전 구간이 API 키 없이 실제로 동작한다.**
+현재 실재하는 것: (1) 5개 에이전트(rubric-architect, dart-researcher, evidence-extractor, scoring-engine-dev, prsti-auditor) + 6개 스킬로 구성된 서브에이전트 개발 절차(`prsti-harness` 참고), (2) 실제 동작하는 파이썬 코드 6개 패키지 — `prsti_common`(rubric.yaml 공유 로더·비용 통제 설정), `dart_researcher`(DART Open API 클라이언트, 실제 조회 검증됨), `evidence_extractor`/`anthropic_extractor`(Claude API 구조화 출력 클라이언트, 선택적 비교 실험용으로 격리), `rule_based_extractor`(무료 규칙 기반 자동 채점, **기본 실행 경로**), `scoring_engine`(결정론적 점수 계산), `webapp`(Streamlit 로컬 웹 애플리케이션 — 임의 기업명 입력 → DART 조회 → 자동 채점 요약 화면). **DART 조회부터 최종 점수 산출, 웹 화면 표시까지의 전 구간이 API 키 없이(DART_API_KEY만으로) 실제로 동작한다.**
 
 ## 9. 데이터 수집·처리·평가 흐름
 논문 표6~8 → 루브릭(v1.0, 승인 완료) + `rubric_rules.yaml`(기계 실행 규칙, 2026-07-21 신규) → DART 소량 조회(`dart_researcher` — 무료, 실제 조회 검증됨) → 근거 탐지·채점(`rule_based_extractor` — 무료, 키워드·패턴 기반 자동 판정) → 결정론적 총점 계산(`scoring_engine` — 변경 없이 재사용). 이 전체 경로가 한화솔루션 1개 기업에 대해 실제로 끝까지 실행됐다(`_workspace/dart_한화솔루션_2025.json` → `_workspace/derived/scored_한화솔루션_2025.json`). 별도 경로로 `evidence_extractor`(AI 제안값) → 사람 확정 흐름도 코드는 완성돼 있으나, 무과금 원칙에 따라 이 경로의 라이브 API 호출은 보류 중이다.
@@ -70,18 +70,18 @@
 | 규칙 기반 완전 자동 채점 | [구현완료·실행 검증됨](`rule_based_extractor`, Claude API 미사용·무료, 실제 한화솔루션 데이터로 19개 항목 전부 자동 채점, 테스트 21개) |
 | 점수 계산 엔진 | [구현완료·검증됨](`scoring_engine`, API 미사용, 자동 테스트 10개 전부 실제 실행 통과) |
 | AI 근거 추출(선택적 비교 실험용) | [코드 구현완료·라이브 미검증](`anthropic_extractor`, mock 테스트 12개 통과. `ALLOW_PAID_API=false`가 기본값이라 실제 호출은 보류) |
-| 웹 MVP | [계획단계] |
+| 웹 MVP | [구현완료·실행 검증됨](`webapp/`, Streamlit 로컬 웹앱. 기업명·기간 입력 → DART 조회 → 규칙 기반 채점 → 총점/영역별 점수 요약 화면. `streamlit run webapp/app.py`로 실행, 헤드리스 실행으로 기동 확인·`AppTest` 렌더링 테스트 통과, 테스트 7개) |
 | Notion 포트폴리오 동기화 | [구현완료] |
 
 ## 11. 어려웠던 문제와 해결 과정
 → TS-001(논문 추출본 누락, 2026-07-21 PDF 재추출로 완전 해결), TS-002(TeamCreate 미지원), TS-003(git 미설치), TS-004(규칙 기반 후보 선택 로직이 더 강한 증거를 놓치던 문제 발견·수정)
 
 ## 12. 테스트·검증 방법
-`pytest` 기반 자동 테스트 **50개(전부 통과)**: `evidence_extractor` 공용부 8개(루브릭 로더·프롬프트·환각 검증, 실제 실행), `anthropic_extractor` 5개(Claude API 호출부, `unittest.mock`으로 배선 검증 — `ALLOW_PAID_API` 게이트가 기본값에서 호출 자체를 차단하는지가 최우선 검증 대상), `scoring_engine` 10개(API 미사용, 결정론성·조건부 na_rule·권장항목 미반영을 mock 없이 실제 실행으로 검증), `dart_researcher` 6개(동의어 탐지·과다탐지 방지, mock), `rule_based_extractor` 21개(규칙 로더·키워드/패턴 탐지·점수 판정·파이프라인 결정론성을 mock 없이 실제 실행으로 검증. 특히 "만기 연장"이 콜옵션 항목으로 오분류되지 않는지, insufficient_evidence 항목이 매치가 있어도 임의로 점수를 올리지 않는지, `rule_based_extractor`를 서브프로세스에서 단독 import해도 anthropic 모듈이 전혀 로드되지 않는지를 각각 별도 테스트로 강제). 여기에 더해 `prsti-qa-checklist`의 수동 절차를 병행 적용 중.
+`pytest` 기반 자동 테스트 **58개(전부 통과)**: `evidence_extractor` 공용부 8개(루브릭 로더·프롬프트·환각 검증, 실제 실행), `anthropic_extractor` 5개(Claude API 호출부, `unittest.mock`으로 배선 검증 — `ALLOW_PAID_API` 게이트가 기본값에서 호출 자체를 차단하는지가 최우선 검증 대상), `scoring_engine` 10개(API 미사용, 결정론성·조건부 na_rule·권장항목 미반영을 mock 없이 실제 실행으로 검증), `dart_researcher` 6개(동의어 탐지·과다탐지 방지, mock), `rule_based_extractor` 22개(규칙 로더·키워드/패턴 탐지·점수 판정·파이프라인 결정론성·영역별 점수 배분을 mock 없이 실제 실행으로 검증. 특히 "만기 연장"이 콜옵션 항목으로 오분류되지 않는지, insufficient_evidence 항목이 매치가 있어도 임의로 점수를 올리지 않는지, `rule_based_extractor`를 서브프로세스에서 단독 import해도 anthropic 모듈이 전혀 로드되지 않는지를 각각 별도 테스트로 강제), `webapp` 7개(DART 조회 예외를 화면 오류 메시지로 안전하게 변환하는지 — `MissingAPIKeyError`·`DartApiError`·예상 못한 예외 3가지 경로 — 그리고 `streamlit.testing.v1.AppTest`로 페이지가 예외 없이 렌더링되는지, 실제 DART 네트워크 호출 없이 검증). 여기에 더해 `prsti-qa-checklist`의 수동 절차를 병행 적용 중.
 
 ## 13. 정량적 결과와 실제 확인된 성과
 - 논문 통합 공시 항목 매핑률: **19/19 (100%)** — `rubric/rubric.yaml`의 각 item에 `source_table`/`source_item_id`가 있는지 세어 검증 가능
-- 자동 테스트: **50/50 통과**
+- 자동 테스트: **58/58 통과**
 - DART 실제 조회: 한화솔루션 1개 기업, 2025년 정기공시 29건 후보 중 **6건이 실제 PRS 관련 문서로 채택**(23건은 "우발부채 및 약정사항"이라는 공통 주석 항목의 위양성 — 이 구분 자체가 실측으로 확인한 결과)
 - 규칙 기반 자동 채점: 19개 항목 중 **2개(필수-03 만기일·필수-10 셀다운)는 rule_status=confirmed로 실제 원문 근거와 함께 자동 2점 판정**, 나머지 항목은 provisional(8개) 또는 insufficient_evidence(9개)로 정직하게 표시. 한화솔루션 총점 30.75/100(잠정치) — 이 수치를 "정확도"나 "타당성 입증"으로 표현하지 않는다(§14 한계 참고, 검증 표본이 1개 기업뿐)
 - `scoring_engine`은 전체 100점 만점 시나리오(전 항목 만점/0점/조건부 auto_max/미검토 혼재)를 실제로 계산시켜 기대값과 일치함을 확인
@@ -90,7 +90,9 @@
 ## 14. 프로젝트의 한계와 개선 방향
 - 19개 항목 중 9개(47%)는 1·2점에 해당하는 실제 공시 사례가 논문에도, 실제 DART 조회에도 없다(`rule_status: insufficient_evidence`) — 이는 논문의 핵심 논지(핵심 위험 항목일수록 공시가 비어있다)와 일치하는 결과이지만, 규칙 엔진이 이 항목들에서 자동으로 1·2점을 줄 수 없다는 뜻이기도 하다
 - 검증 표본이 회사 1개(한화솔루션)뿐이라 "규칙 도출용/검증용" 데이터 분리가 불가능했고, 규칙을 만들고 같은 데이터로 검증하는 과적합 위험이 있음을 그대로 인정한다
-- rubric.yaml의 accepted_example 2건이 부정확함을 발견(조건부-01은 가상 예시를 실제 사례로 오인, 권장-01은 다른 항목에서 이미 배제한 자료를 인정) — 수정은 사용자 확인 후 진행 예정(DEC-015)
+- **제품의 목적상(DEC-017) 기준기업을 두지 않고 임의 기업을 조회할 수 있어야 하는데, 지금 `rubric_rules.yaml`의 키워드·정규식은 한화솔루션 1개사의 공시 문구로 도출된 것이라 다른 기업·다른 서술 방식에서는 재현율이 떨어질 위험이 여전히 있다** — 임의 기업에 실제로 적용해보며 계속 검증·보강해야 하는 항목으로 남겨둔다(과장하지 않는다)
+- rubric.yaml의 accepted_example 2건 오류(조건부-01 가상 예시 오인, 권장-01 배제 자료 혼용)는 발견 후 수정 완료(DEC-015, 2026-07-21)
+- 웹 애플리케이션은 로컬 실행 전용이며(배포 없음), 실제 사용자 테스트는 아직 없다 — 기동·렌더링·오류 처리 경로만 자동 테스트로 확인된 상태
 - git 미도입으로 커밋 단위 이력 추적 불가(DEC-004, 이후 해결), 실사용자 검증 없음
 
 ## 15. 회계·감사·IT 직무와의 연결
@@ -129,6 +131,7 @@
 | 2026-07-20 | 무과금 개발 원칙(DEC-013) 반영, scoring_engine 구현 완료·검증 상태 추가, 테스트 현황 갱신(23개) | DEV-20260720-16 |
 | 2026-07-21 | 논문 부록 6개 기업 사례 보완 반영(TS-001 해결), dart_researcher 실 데이터 수집 반영 | DEV-20260721-01·02 |
 | 2026-07-21 | rule_based_extractor(무료 완전 자동 채점) 구현 반영, DART~점수계산 전 구간 실행 검증 상태로 갱신, 테스트 현황 갱신(50개), rubric.yaml 오류 발견 기록(DEC-015) | DEV-20260721-03 |
+| 2026-07-21 | rubric.yaml accepted_example 2건 수정 완료 반영(DEC-015 해결), 모-자회사 한정 없음(DEC-016)·기준기업 미고정(DEC-017) 반영, 웹 MVP를 Streamlit 로컬 웹앱으로 구현 완료 상태로 갱신, 테스트 현황 갱신(58개) | DEV-20260721-04·05 |
 
 ---
 

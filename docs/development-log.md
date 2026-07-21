@@ -186,3 +186,18 @@
 - **관련 커밋**: (다음 커밋에 포함 예정)
 - **상태**: [구현됨] — `criteria`/`na_rule`/`proposed_weight`/구조는 손대지 않았으므로 기존 50개 테스트 결과에 영향 없음(재실행으로 확인 예정)
 - **관련 항목**: DEC-015
+
+## DEV-20260721-05: 로컬 웹 애플리케이션(webapp/, Streamlit) 구현
+
+- **일시**: 2026-07-21
+- **한 일**: 사용자가 "모-자회사로 한정하지 않는다"(DEC-016), "기준기업을 미리 정하지 않고 임의 기업을 조회할 수 있어야 한다"(DEC-017)는 두 가지를 확정하고, 이어서 "로컬 웹 애플리케이션으로 진행하고 싶다 — 자동 채점 프로그램을 개발하고 웹페이지 형태로 제공하자"고 요청. 프레임워크(Streamlit/Flask+HTML/FastAPI+프론트)와 첫 화면 범위(요약 중심/19개 항목 상세)는 사용자 판단이 필요해 AskUserQuestion으로 확인 — 둘 다 추천안(Streamlit, 요약 중심)으로 확정(DEC-018).
+
+  `rule_based_extractor/schema.py`의 `RuleScoringReport`에 `areas: list[AreaResult]`(scoring_engine의 영역별 배점 재사용) 필드를 추가하고 `pipeline.py`에서 채워 넣어, 지금까지 총점만 노출하던 파이프라인 출력에 영역별 점수 breakdown을 추가(회귀 테스트 `test_pipeline_areas_match_scoring_engine_breakdown` 추가). `webapp/report_view.py`(Streamlit 비의존 순수 로직 — `run_scoring()`이 DART 조회+채점을 실행하고 `MissingAPIKeyError`/`DartApiError`/예상 못한 예외를 화면용 메시지로 변환, `build_summary()`가 총점·영역별·잠정치·권장·후보 통계를 화면 표시용 딕셔너리로 가공)와 `webapp/app.py`(입력 폼 → 결과 카드/표를 그리는 얇은 Streamlit 화면 레이어)로 분리 — 로직과 화면을 분리해 Streamlit 없이도 핵심 로직을 단위 테스트할 수 있게 함.
+
+  `tests/test_webapp.py` 7개 작성: `dart_researcher.search.search_company`를 monkeypatch로 대체해 실제 네트워크 호출 없이 (1) 정상 채점 흐름, (2) DART_API_KEY 미설정, (3) 존재하지 않는 기업명(DartApiError), (4) 예상 못한 예외 3가지 오류 경로가 각각 올바른 사용자 메시지로 변환되는지, (5) 후보를 하나도 못 찾았을 때 "근거 없음" 경고가 뜨는지, (6) 영역별 요약에 비율이 계산되는지를 검증. 마지막으로 `streamlit.testing.v1.AppTest`로 `webapp/app.py`가 예외 없이 렌더링되는지도 확인. 추가로 `streamlit run webapp/app.py --server.headless true`로 실제 기동시켜 로컬 서버가 HTTP 200을 반환하는지 수동 확인 후 프로세스 종료.
+
+  `requirements.txt`에 `streamlit`(이미 설치돼 있던 버전 1.51 그대로 명시) 추가, `README.md`의 "현재 상태" 표와 저장소 구조를 실제 구현 상태(6개 패키지 + webapp)에 맞게 갱신(기존 표가 2026-07-20 시점 그대로 방치돼 "Phase 0, 실행 가능한 코드 없음"이라고 낡은 정보를 보여주고 있었음 — README 자체가 stale했던 문제도 함께 바로잡음), `docs/portfolio-evidence.md`의 웹 MVP 상태·테스트 개수(58개)·한계(§14에 "임의 기업 대상 재현율 미검증" 한계 명시) 갱신.
+- **산출물**: `webapp/__init__.py`, `webapp/report_view.py`, `webapp/app.py`, `rule_based_extractor/schema.py`·`pipeline.py`(areas 필드 추가), `tests/test_webapp.py`(신규), `tests/test_rule_based_extractor.py`(areas 회귀 테스트 추가), `requirements.txt`, `README.md`, `docs/decision-log.md`(DEC-016·017·018), `docs/portfolio-evidence.md`
+- **관련 커밋**: (다음 커밋에 포함 예정)
+- **상태**: [구현됨·실행 검증 완료](전체 테스트 58/58 통과, 헤드리스 기동으로 실제 로컬 서버 응답 확인. 단, 실사용자 테스트나 여러 기업에 대한 재현율 검증은 아직 없음 — §14 한계 그대로 유지)
+- **관련 항목**: DEC-016, DEC-017, DEC-018

@@ -6,6 +6,8 @@ from typing import Literal
 
 from pydantic import BaseModel
 
+from scoring_engine.schema import AreaResult
+
 
 class EvidenceRef(BaseModel):
     text: str
@@ -32,6 +34,7 @@ class RuleScoringReport(BaseModel):
     scoring_method: Literal["rule_based"] = "rule_based"
     computed_at: str
     items: list[RuleItemResult]
+    areas: list[AreaResult]
     total_score: float
     max_score: float
     is_provisional: bool

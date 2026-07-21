@@ -229,6 +229,16 @@ def test_pipeline_excludes_irrelevant_document_from_used_count():
     assert report.candidates_excluded >= 1
 
 
+def test_pipeline_areas_match_scoring_engine_breakdown():
+    # 웹앱의 영역별 요약 화면이 쓸 report.areas가 scoring_engine의 영역 배점 구조
+    # (area_id/area_name/weight/earned/max_possible)를 그대로 반영하는지 확인.
+    report = score_company_from_documents(company_name="테스트기업", documents=_sample_documents())
+    area_ids = {area.area_id for area in report.areas}
+    assert area_ids == {"가", "나", "다", "라", "조건부"}  # 권장 영역은 weight=None이라 제외됨
+    total_earned = round(sum(area.earned for area in report.areas), 2)
+    assert total_earned == report.total_score
+
+
 def test_pipeline_is_deterministic():
     docs = _sample_documents()
     r1 = score_company_from_documents(company_name="X", documents=docs)

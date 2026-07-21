@@ -1,6 +1,6 @@
 # PRSTI — PRS 공시 투명성 지수 (PRS Transparency Index)
 
-> **현재 상태: Phase 0 (평가기준 설계 단계). 실행 가능한 코드는 아직 없습니다.**
+> **현재 상태: 규칙 기반 자동 채점 파이프라인 + 로컬 웹 애플리케이션 실행 가능.**
 > 이 저장소는 진행 중인 개인 프로젝트이며, 아래 "현재 상태"를 있는 그대로 표시합니다.
 
 ## 한 줄 소개
@@ -20,17 +20,18 @@
 - **구현 사실과 계획을 구분한다.** `[구현완료]` `[설계완료·미구현]` `[계획단계]` 태그를 일관되게 사용한다.
 - **의사결정과 그 이유를 기록한다.** `docs/decision-log.md`에 모든 주요 판단과 대안·근거·결정 주체를 남긴다.
 
-## 현재 상태 (2026-07-20 기준)
+## 현재 상태 (2026-07-21 기준)
 
 | 구성요소 | 상태 |
 |---|---|
 | 논문 → 루브릭 19개 항목 추적성 매핑 | 완료 (19/19, 100%) |
 | 다중 에이전트 하네스(에이전트 5개·스킬 6개) | 설계 완료 |
-| 루브릭(`rubric/rubric.yaml`) | 초안 — 항목 구조·N/A 규칙·근거 인정기준 확정, **배점은 미확정** |
-| 점수 계산 엔진 (Python) | 계획 단계 — 코드 없음 |
-| DART 공시 수집 | 계획 단계 — 코드 없음 |
-| AI 근거 추출 | 계획 단계 — 코드 없음 |
-| 웹 MVP | 계획 단계 |
+| 루브릭(`rubric/rubric.yaml`) | 승인(v1.0) — 항목 구조·N/A 규칙·근거 인정기준·배점(잠정) 전부 확정 |
+| 점수 계산 엔진(`scoring_engine`) | 구현 완료·실행 검증됨(API 미사용) |
+| DART 공시 수집(`dart_researcher`) | 구현 완료·실 데이터 검증됨(무료) |
+| 규칙 기반 자동 채점(`rule_based_extractor`) | 구현 완료·실행 검증됨(Claude API 미사용, 임의 기업 입력 지원 — DEC-017) |
+| AI 근거 추출(`evidence_extractor`, 선택적 비교 실험용) | 코드 구현 완료·라이브 미검증(`ALLOW_PAID_API=false`가 기본값, DEC-013) |
+| 로컬 웹 애플리케이션(`webapp/`, Streamlit) | 구현 완료 — `streamlit run webapp/app.py`로 실행, 기업명·기간 입력 → DART 조회 → 자동 채점 요약 화면 |
 
 ## 저장소 구조
 
@@ -47,11 +48,29 @@ PRSTI/
 │   ├── portfolio-evidence.md       # 포트폴리오/자기소개서 근거
 │   └── progress-report-2026-07-20.md
 ├── rubric/
-│   └── rubric.yaml     # 기계가 읽는 채점 기준 (초안)
+│   ├── rubric.yaml         # 사람이 승인한 채점 기준(배점·N/A 규칙 등)
+│   └── rubric_rules.yaml   # 기계가 읽는 규칙(키워드·정규식·rule_status)
+├── prsti_common/        # rubric 로더 등 공용 모듈
+├── scoring_engine/      # 결정론적 점수 계산(API 미사용)
+├── dart_researcher/     # DART Open API 조회 + 키워드 탐지(무료)
+├── rule_based_extractor/  # 규칙 기반 자동 채점 파이프라인(API 미사용)
+├── evidence_extractor/  # AI 근거 추출(선택적 비교 실험용, 기본 비활성)
+├── webapp/              # 로컬 웹 애플리케이션(Streamlit)
+├── tests/               # 자동 테스트 58개
 ├── _workspace/
-│   └── rubric_gaps.md  # 사용자 결정이 필요한 쟁점 기록
+│   └── rubric_gaps.md  # 사용자 결정이 필요한 쟁점 기록(현재 전부 해결됨)
 └── 논문 원문·기획초안 (참고자료)
 ```
+
+## 로컬 웹 애플리케이션 실행
+
+```bash
+pip install -r requirements.txt
+export DART_API_KEY=본인이_발급받은_키   # https://opendart.fss.or.kr
+streamlit run webapp/app.py
+```
+
+기업명(DART 등록명)과 조회 기간을 입력하면 DART 공시를 실시간 조회해 총점·영역별 점수·잠정치 여부를 보여준다. Claude API/anthropic 패키지는 전혀 필요 없다.
 
 ## 참고
 
