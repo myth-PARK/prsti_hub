@@ -12,6 +12,17 @@
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
+
+# `streamlit run webapp/app.py`는 이 스크립트가 있는 webapp/ 폴더만 sys.path에 넣고
+# 저장소 루트는 넣지 않는다 — 그래서 `pip install -e .`나 `python -m` 없이 그냥
+# 실행하면 webapp(자기 자신)도, rule_based_extractor/dart_researcher 같은 형제
+# 패키지도 못 찾는다. 저장소 루트를 직접 sys.path에 넣어 어디서 실행하든 동작하게 한다.
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
 import streamlit as st
 
 from webapp.report_view import build_summary, run_scoring

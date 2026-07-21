@@ -225,3 +225,16 @@
 - **관련 커밋**: (다음 커밋에 포함 예정)
 - **상태**: [실행됨·가설 기각](기간 문제라는 가설은 이번 재조회로 확인되지 않음 — 원인 미확정 상태 유지)
 - **관련 항목**: TS-005
+
+## DEV-20260721-08: 실사용자 최초 실행에서 ModuleNotFoundError 발견·수정 (TS-006)
+
+- **일시**: 2026-07-21
+- **한 일**: 사용자가 "지금 프로그램은 개발되고 로컬에서 사용이 가능한거니?"라고 물어, 직접 백그라운드로 `streamlit run webapp/app.py`를 띄워 로컬 서버 응답까지 확인한 뒤 사용자에게 브라우저 접속을 안내했다. 사용자가 실제로 접속·실행하자 곧바로 `ModuleNotFoundError: No module named 'webapp'`를 겪었다 — 개발 중 확인했던 헤드리스 기동(HTTP 200)과 `AppTest` 테스트는 둘 다 이 문제를 잡아내지 못한 상태였다.
+
+  원인: `streamlit run`은 스크립트 폴더(`webapp/`)만 `sys.path`에 넣고 저장소 루트는 넣지 않는데, `python -m pytest`로 도는 테스트는 저장소 루트가 이미 `sys.path`에 있어서 같은 임포트가 우연히 통과하고 있었다. curl로 HTTP 200만 확인한 것도 무효한 검증이었음을 확인 — Streamlit은 스크립트 실행 결과를 웹소켓으로 전달하므로 임포트 실패와 무관하게 최초 HTTP 응답은 200이 나온다.
+
+  `webapp/app.py` 최상단에 저장소 루트를 `sys.path`에 직접 삽입하는 부트스트랩 코드를 추가해 실행 방식과 무관하게 항상 동작하도록 고쳤다. 수동으로는 `sys.path`를 `streamlit run`과 동일한 조건으로 강제한 서브프로세스에서 `runpy.run_path`로 재현·확인했고, 이 검증 방법을 그대로 `tests/test_webapp.py`에 회귀 테스트로 추가했다 — 기존 `AppTest` 테스트만으로는 이 조건을 재현하지 못한다는 것이 이번에 드러난 교훈이다.
+- **산출물**: `webapp/app.py`(sys.path 부트스트랩 추가), `tests/test_webapp.py`(`test_app_imports_when_repo_root_is_not_already_on_sys_path` 신규), `docs/troubleshooting-log.md`(TS-006 신규)
+- **관련 커밋**: (다음 커밋에 포함 예정)
+- **상태**: [해결됨·재실행 검증 완료](전체 테스트 59/59 통과, 수정 후 서버를 재기동해 동일한 sys.path 조건에서 임포트가 정상 통과함을 서브프로세스로 재확인)
+- **관련 항목**: TS-006

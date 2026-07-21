@@ -59,3 +59,13 @@
 - **재발 방지 조치**: 없음 — 추후 이 항목을 더 조사하려면 (3)번 가설부터 확인(논문 원문에서 이 문장이 나온 절 앞뒤로 원 출처 각주가 있는지 재확인)하는 것이 다음 단계로 남아있다.
 - **관련 development-log**: DEV-20260721-06, DEV-20260721-07
 - **상태**: 미해결·조사 중단(2026-07-21, 사용자 지시 "sk이노베이션은 여기서 멈추자"에 따라 추가 조사 보류). 가설 3개(보고서 유형 상이·1단계 문단탐지 누락·논문 서술이 원문 인용이 아닐 가능성) 중 원인 미확정 상태로 남겨두며, `rubric_rules.yaml` 조건부-01의 SK이노베이션 사례는 "실제 원문 대조 전"이라는 `missing_evidence` 표기를 유지한다(점수 자동화 로직에는 영향 없음 — 조건부-01은 여전히 provisional 상태로 안전하게 0~1점만 자동 판정).
+
+## TS-006: `streamlit run webapp/app.py` 실행 시 `ModuleNotFoundError: No module named 'webapp'`
+
+- **일자**: 2026-07-21
+- **증상**: 사용자가 실제로 로컬에서 `streamlit run webapp/app.py`를 실행하자 `from webapp.report_view import build_summary, run_scoring` 줄에서 `ModuleNotFoundError: No module named 'webapp'`가 발생. 개발 중 실행했던 헤드리스 기동 확인(HTTP 200)과 `tests/test_webapp.py`의 `AppTest` 렌더링 테스트는 둘 다 통과한 상태였는데도 실사용자 환경에서는 바로 재현됐다.
+- **원인 분석**: `streamlit run <script>`은 스크립트가 있는 폴더(`webapp/`)만 `sys.path`에 넣고, 저장소 루트는 넣지 않는다 — `python -m pytest`로 돌리는 테스트는 pytest가 저장소 루트를 이미 `sys.path`에 넣어주기 때문에 `webapp.report_view`, `rule_based_extractor`, `dart_researcher` 같은 절대 임포트가 우연히 다 통과했던 것이다. `AppTest`도 같은 pytest 프로세스 안에서 실행되므로 이 문제를 가리고 있었다 — 즉 **테스트 방식 자체가 실제 사용자 실행 방식(`streamlit run`, 별도 프로세스)과 sys.path 조건이 달라서 버그를 못 잡았다.** curl로 HTTP 200만 확인한 것도 무효한 검증이었다 — Streamlit은 초기 HTML을 정적 셸(SPA)로 보내고 실제 스크립트 실행 결과는 브라우저 쪽 JS가 웹소켓으로 받아 렌더링하므로, 서버가 내부적으로 스크립트 임포트에 실패해도 최초 HTTP 응답 자체는 200을 반환한다.
+- **최종 해결**: `webapp/app.py` 최상단에 `Path(__file__).resolve().parent.parent`(저장소 루트)를 `sys.path`에 직접 삽입하는 부트스트랩 코드를 추가 — 어떤 방식으로 실행되든(streamlit run, AppTest, pytest) 저장소 루트가 항상 sys.path에 있도록 보장한다. `sys.path = [webapp_dir만] + ...`로 저장소 루트를 의도적으로 제거한 서브프로세스에서 `runpy.run_path("webapp/app.py")`를 실행해 수동으로 재현·확인.
+- **재발 방지 조치**: `tests/test_webapp.py`에 `test_app_imports_when_repo_root_is_not_already_on_sys_path` 추가 — 서브프로세스에서 `sys.path`를 `streamlit run`과 동일한 조건(스크립트 폴더만)으로 강제한 뒤 `app.py`를 로드해 `ModuleNotFoundError` 없이 끝나는지 검증한다. 기존 `AppTest` 기반 테스트만으로는 이 조건을 재현하지 못한다는 것을 이번에 배웠다 — **UI 관련 실행 파일을 테스트할 때는 "실제 사용자가 실행하는 그 명령"과 sys.path/cwd 조건이 같은지 별도로 확인해야 한다.**
+- **관련 development-log**: DEV-20260721-08
+- **상태**: 해결
