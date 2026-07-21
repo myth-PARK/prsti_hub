@@ -7,6 +7,24 @@
 
 한국회계학회지에 게재된 연구논문(최아리·고민서·박신화·이규진·현정훈, 2026)이 제안한 「PRS(주가수익스와프) 통합 공시 지침」을, 논문 원문과 항목 단위로 추적 가능한 평가 루브릭 그리고 재사용 가능한 다중 에이전트 개발 체계로 구조화하는 프로젝트입니다.
 
+## 🖥️ 지금 바로 실행해보기 (로컬 웹 애플리케이션)
+
+DART_API_KEY만 있으면 코드를 들여다볼 필요 없이 바로 써볼 수 있습니다. 기업명을 입력하면 실제 DART 공시를 조회해서, 논문이 제안한 기준으로 자동 채점한 결과를 보여줍니다. Claude API·`anthropic` 패키지는 전혀 필요 없습니다 — 규칙 기반(정규식·키워드) 엔진이라 무료로 동작합니다.
+
+```bash
+git clone https://github.com/myth-PARK/prsti_hub.git
+cd prsti_hub
+pip install -r requirements.txt
+export DART_API_KEY=본인이_발급받은_키   # https://opendart.fss.or.kr 에서 무료 발급
+streamlit run webapp/app.py
+```
+
+실행하면 터미널에 `Local URL: http://localhost:8501`이 뜹니다 — 그 주소를 브라우저로 열면 됩니다.
+
+**사용 예시**: 기업명 "한화솔루션", 조회 기간 2025-01-01~2025-12-31을 입력하면 총점 30.75/100(잠정치)과 함께, 필수-03(만기일)·필수-10(셀다운) 항목이 실제 공시 원문 근거와 함께 자동으로 2점 판정되는 것을 볼 수 있습니다.
+
+> **현재는 로컬 전용이며, 공개 배포 링크(누구나 클릭해서 바로 쓸 수 있는 주소)는 아직 없습니다.** 위 명령으로 각자의 컴퓨터에서 실행해야 합니다. 내부 구조는 [`webapp/app.py`](webapp/app.py)·[`webapp/report_view.py`](webapp/report_view.py)·[`rule_based_extractor/`](rule_based_extractor/)를 참고하세요.
+
 ## 배경
 
 국내 PRS 계약 규모는 2022년 약 992억 원에서 2025년 9월 10조 8,598억 원으로 급증했지만, 기업마다 공시 항목·명칭·상세도가 달라 투자자가 거래의 경제적 실질(부채성 여부, 잠재적 현금유출)을 비교하기 어렵습니다. 기반 논문은 10개 기업의 실제 PRS 공시를 심층 분석해 이 문제를 실증했고, 필수 12·조건부필수 3·권장 4개 항목으로 구성된 통합 공시 지침을 제안했습니다.
@@ -56,21 +74,11 @@ PRSTI/
 ├── rule_based_extractor/  # 규칙 기반 자동 채점 파이프라인(API 미사용)
 ├── evidence_extractor/  # AI 근거 추출(선택적 비교 실험용, 기본 비활성)
 ├── webapp/              # 로컬 웹 애플리케이션(Streamlit)
-├── tests/               # 자동 테스트 58개
+├── tests/               # 자동 테스트 59개
 ├── _workspace/
 │   └── rubric_gaps.md  # 사용자 결정이 필요한 쟁점 기록(현재 전부 해결됨)
 └── 논문 원문·기획초안 (참고자료)
 ```
-
-## 로컬 웹 애플리케이션 실행
-
-```bash
-pip install -r requirements.txt
-export DART_API_KEY=본인이_발급받은_키   # https://opendart.fss.or.kr
-streamlit run webapp/app.py
-```
-
-기업명(DART 등록명)과 조회 기간을 입력하면 DART 공시를 실시간 조회해 총점·영역별 점수·잠정치 여부를 보여준다. Claude API/anthropic 패키지는 전혀 필요 없다.
 
 ## 참고
 
