@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 출처 미확인 — VSCode 확장 등에서 자동 생성된 것으로 보이는 산출물 (2026-07-20 확인 필요)
+record/
