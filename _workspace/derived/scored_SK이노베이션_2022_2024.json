@@ -1,0 +1,369 @@
+{
+  "company": "SK이노베이션",
+  "rubric_version": "1.0",
+  "scoring_method": "rule_based",
+  "computed_at": "2026-07-21T21:25:15.961497+09:00",
+  "items": [
+    {
+      "rubric_id": "필수-01",
+      "score": 2,
+      "confidence": "medium",
+      "review_recommended": true,
+      "evidence": [
+        {
+          "text": "사의 임직원을 대상으로 SK이노베이션 보통주 주가 및 KOSPI200지수를 기초자산으로 하는 주가차액보상권을 부여하였습니다. 주가차액보상권은 매년 초 부여하며, 이후 3년 이상 재직 시 가득됩니다.또한, 당사의 종속기업이 당사의 자기주식을 종속기업 임직원에게 지급하는 약정과 관련하여, 종속기업은 당사와의 정산합의서에 따라 주식기준보상거래를 정산하였습니다. 정산합의서에 따른 정산금액은 당3분기와 전3분기 각각 490백만원, 293백만원입니다(주석 33 참조).(2) 당누적3분기 및 전누적3분기 중 주식선택권의 부여로 인한 보상원가의 내역은 다음과 같습니다. 주식선택권의 보상원가에 대한 공시 당분기 (단위 : 백만원) 주식기준 보상원가 당기보상원가 3,077 누적보상원가 12,154 잔여보상원가 989 총 보상",
+          "source_document": "분기보고서 (2024.09)",
+          "receipt_no": "20241114001571",
+          "source_location": "매칭 키워드: 기초자산, 정산금액, 차액"
+        }
+      ],
+      "matched_rules": [
+        "amount_expression"
+      ],
+      "decision_reason": "매치된 키워드: [], 매치된 패턴: ['amount_expression'] (rule_status=provisional)",
+      "rule_basis": [
+        "표10: 10개 기업 전원 ○(계약규모 100% 공시)",
+        "한화솔루션 실 DART(2025 반기보고서, rcept_no 20250814002909): '약정 금액 500,000'(백만원)"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "필수-02",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 한화솔루션·에코프로=✕, LG화학=△, 나머지 7개=○",
+        "한화솔루션 실 DART: 거래상대방을 '매매수익 지급자/매매수익 수령자'라는 역할명으로만 지칭, 실제 명칭(SPC/금융기관) 없음 — 표10의 ✕ 등급과 정확히 교차검증됨"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "필수-03",
+      "score": 2,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [
+        {
+          "text": "최대주주의 주식매도청구권(Call Option)등 주주간 계약에 포함된 권리들에 대하여 당3분기말 현재 파생금융상품부채를 인식하였습니다(주석16 참조). 부채 인식액, 주주간 계약 포함 권리 487,006 또한, 지배기업은 종속기업인 에스케이온(주)의 신주인수계약과 관련하여 2024년 9월 30일자로 에스케이온(주) 주식 18,031,337주에 대하여 주식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 종속기업 주가수익스왑계약에 대한 공시 주가수익스왑계약 투자자 에스프로젝트이노 주식회사 등 대상주식수 18,031,337 주가수익스왑계약의 효력 발생일 2024-10-15 주가수익스왑계약의 만기일 2027-10-15 약정 내용 매수자의 기초자산 매각시 매각금액과 정 식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 종속기업 주가수익스왑계약에 대한 공시 주가수익스왑계약 투자자 에스프로젝트이노 주식회사 등 대상주식수 18,031,337 주가수익스왑계약의 효력 발생일 2024-10-15 주가수익스왑계약의 만기일 2027-10-15 약정 내용 매수자의 기초자산 매각시 매각금액과 정산금액과의 차액을 수수함 종속기업 주식매도청구권에 대한 공시 에스케이지오센트릭(주) SK트레이딩인터내셔널(주) 주식매도청구권 설명 종속기업인 에스케이지오센트릭(주)는 (주)삼양패키징(이하 \"전략적 제휴사\")으로부터 전략적 제휴사의 자회사인 (주)삼양에코테크(이하 \"합작사\")에 대한 주식매도청구권을 부여 받았습니다.연결실체는 아래의 사유 중 1개에 해당하는",
+          "source_document": "분기보고서 (2024.09)",
+          "receipt_no": "20241114001571",
+          "source_location": "매칭 키워드: PRS, 기초자산, 정산금액, 차액"
+        }
+      ],
+      "matched_rules": [
+        "만기일",
+        "date_expression",
+        "duration_expression"
+      ],
+      "decision_reason": "매치된 키워드: ['만기일'], 매치된 패턴: ['date_expression', 'duration_expression'] (rule_status=confirmed)",
+      "rule_basis": [
+        "표10: 한화솔루션·SK이노베이션·롯데케미칼·CJ ENM·두산로보틱스·금호건설=○",
+        "한화솔루션 실 DART(2025 반기·분기보고서): '계약일 2025-06-24 만기일 2028-06-26' — 실제 2점 사례로 신규 확보(2026-07-21)"
+      ],
+      "rule_status": "confirmed"
+    },
+    {
+      "rubric_id": "필수-04",
+      "score": 2,
+      "confidence": "medium",
+      "review_recommended": true,
+      "evidence": [
+        {
+          "text": "최대주주의 주식매도청구권(Call Option)등 주주간 계약에 포함된 권리들에 대하여 당3분기말 현재 파생금융상품부채를 인식하였습니다(주석16 참조). 부채 인식액, 주주간 계약 포함 권리 487,006 또한, 지배기업은 종속기업인 에스케이온(주)의 신주인수계약과 관련하여 2024년 9월 30일자로 에스케이온(주) 주식 18,031,337주에 대하여 주식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 종속기업 주가수익스왑계약에 대한 공시 주가수익스왑계약 투자자 에스프로젝트이노 주식회사 등 대상주식수 18,031,337 주가수익스왑계약의 효력 발생일 2024-10-15 주가수익스왑계약의 만기일 2027-10-15 약정 내용 매수자의 기초자산 매각시 매각금액과 정 식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 종속기업 주가수익스왑계약에 대한 공시 주가수익스왑계약 투자자 에스프로젝트이노 주식회사 등 대상주식수 18,031,337 주가수익스왑계약의 효력 발생일 2024-10-15 주가수익스왑계약의 만기일 2027-10-15 약정 내용 매수자의 기초자산 매각시 매각금액과 정산금액과의 차액을 수수함 종속기업 주식매도청구권에 대한 공시 에스케이지오센트릭(주) SK트레이딩인터내셔널(주) 주식매도청구권 설명 종속기업인 에스케이지오센트릭(주)는 (주)삼양패키징(이하 \"전략적 제휴사\")으로부터 전략적 제휴사의 자회사인 (주)삼양에코테크(이하 \"합작사\")에 대한 주식매도청구권을 부여 받았습니다.연결실체는 아래의 사유 중 1개에 해당하는",
+          "source_document": "분기보고서 (2024.09)",
+          "receipt_no": "20241114001571",
+          "source_location": "매칭 키워드: PRS, 기초자산, 정산금액, 차액"
+        }
+      ],
+      "matched_rules": [
+        "기초자산",
+        "share_count_expression"
+      ],
+      "decision_reason": "매치된 키워드: ['기초자산'], 매치된 패턴: ['share_count_expression'] (rule_status=provisional)",
+      "rule_basis": [
+        "표10 전원○이나 scoring-methodology.md 스스로 '실제로는 2점 기준 만족 여부 재확인 필요'라고 명시",
+        "한화솔루션 실 DART: 'Q Energy Solutions SE 보통주 2,784,293주(22.65%), E-PPRs 684,792단위' — 수량·비율은 있으나 '발행가액' 명시 여부 및 비율의 기준(대상회사 지분율 vs 한화솔루션 자기자본 대비 비율)이 불명확"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "필수-05",
+      "score": 1,
+      "confidence": "medium",
+      "review_recommended": true,
+      "evidence": [
+        {
+          "text": "최대주주의 주식매도청구권(Call Option)등 주주간 계약에 포함된 권리들에 대하여 당3분기말 현재 파생금융상품부채를 인식하였습니다(주석16 참조). 부채 인식액, 주주간 계약 포함 권리 487,006 또한, 지배기업은 종속기업인 에스케이온(주)의 신주인수계약과 관련하여 2024년 9월 30일자로 에스케이온(주) 주식 18,031,337주에 대하여 주식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 종속기업 주가수익스왑계약에 대한 공시 주가수익스왑계약 투자자 에스프로젝트이노 주식회사 등 대상주식수 18,031,337 주가수익스왑계약의 효력 발생일 2024-10-15 주가수익스왑계약의 만기일 2027-10-15 약정 내용 매수자의 기초자산 매각시 매각금액과 정 식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 종속기업 주가수익스왑계약에 대한 공시 주가수익스왑계약 투자자 에스프로젝트이노 주식회사 등 대상주식수 18,031,337 주가수익스왑계약의 효력 발생일 2024-10-15 주가수익스왑계약의 만기일 2027-10-15 약정 내용 매수자의 기초자산 매각시 매각금액과 정산금액과의 차액을 수수함 종속기업 주식매도청구권에 대한 공시 에스케이지오센트릭(주) SK트레이딩인터내셔널(주) 주식매도청구권 설명 종속기업인 에스케이지오센트릭(주)는 (주)삼양패키징(이하 \"전략적 제휴사\")으로부터 전략적 제휴사의 자회사인 (주)삼양에코테크(이하 \"합작사\")에 대한 주식매도청구권을 부여 받았습니다.연결실체는 아래의 사유 중 1개에 해당하는",
+          "source_document": "분기보고서 (2024.09)",
+          "receipt_no": "20241114001571",
+          "source_location": "매칭 키워드: PRS, 기초자산, 정산금액, 차액"
+        }
+      ],
+      "matched_rules": [
+        "정산"
+      ],
+      "decision_reason": "매치된 키워드: ['정산'], 매치된 패턴: [] (rule_status=provisional)",
+      "rule_basis": [
+        "표10 전원○(동일하게 '재확인 필요' 경고 있음)",
+        "한화솔루션 실 DART: '정산기준금액=(매각 완료 기초자산의 총 매각 금액-매각 관련 비용)-매각 완료 기초자산에 해당하는 계약금액' — 공식 기반 차액정산 구조이지, 논문 criteria 문구의 '주당 기준가' 방식이 아님"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "필수-06",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 두산로보틱스·금호건설만 ○, 나머지 8개=✕",
+        "accepted_example은 표9 가상 사례('그린인베스트먼트')뿐 — 실제 기업 사례 아님",
+        "한화솔루션 실 DART: K-IFRS 조항·회계처리 판단근거 언급 전무 — 표10 ✕ 등급과 교차검증됨"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "필수-07",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 10개 기업 전원 ✕(논문도 실제 공시 사례를 찾지 못함)",
+        "한화솔루션 실 DART: 재분류 위험 서술 전무 — 교차검증됨"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "필수-08",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 10개 기업 전원 ✕",
+        "유일한 후보(표A3, LG화학 신용평가사 분석)는 발행회사 자신의 공시가 아니라 DEC-007에 따라 근거로 불인정됨"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "필수-09",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 두산로보틱스=○, 8개=△, 금호건설=✕"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "필수-10",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 한화솔루션만 ○(10개 중 유일)",
+        "한화솔루션 실 DART: '매매수익 지급자는 만기일 내 언제라도 기초자산을 처분할 수 있으며, 매매수익 수령자(회사)는... 이의 제기 또는 항변권을 행사할 수 없음' — 표10 ○ 등급의 실제 근거를 2026-07-21 신규 확보(논문에는 이 원문 인용이 없었음)"
+      ],
+      "rule_status": "confirmed"
+    },
+    {
+      "rubric_id": "필수-11",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 10개 기업 전원 ✕(논문도 실제 사례를 찾지 못함)",
+        "한화솔루션 실 DART에 '만기를 1년씩 반복적으로 연장 가능'이라는 조항이 있으나, 이는 만기 연장(maturity extension)이지 콜옵션(조기 정산)과는 다른 개념 — 오분류 위험을 이번 조사에서 확인"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "필수-12",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표10: 10개 기업 전원 ✕ — 논문이 신설을 제안한 핵심 항목(부채성/자본성 분류의 근간)",
+        "한화솔루션 실 DART: 재매입 의무 서술 전무 — 교차검증됨"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "조건부-01",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "rubric.yaml의 기존 accepted_example('정기적으로 매년 4% 지급...')은 논문이 '예를 들어...' 라며 제시한 가상 예시 문구였음을 2026-07-21 원문 재확인으로 발견 — 실제 사례 아님",
+        "논문 3절에 실제 사례 존재: 'SK이노베이션(모회사)은 자회사 SK온의 유상증자에 참여한 투자자에게 연 5%의 IRR을 보장하는 계약을 체결'"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "조건부-02",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표A2(SK이노베이션 유상증자 자금 이용 결과) — 실제 기업 부록 표, 2026-07-21 원문 위치 재확인함"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "조건부-03",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "rubric.yaml accepted_example도 null — 논문·실제 조회 모두에서 사례 없음"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "권장-01",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "표A3(LG화학)·A4(에코프로) 재무지표 확인됨",
+        "단, 표A3는 필수-08의 counter_example에서 '신용평가사의 외부 분석이라 근거 불인정(DEC-007)'이라고 명시한 바로 그 자료 — 같은 표를 한쪽에서 배제하고 다른 쪽에서 인정하는 상충을 이번 조사에서 발견"
+      ],
+      "rule_status": "provisional"
+    },
+    {
+      "rubric_id": "권장-02",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "rubric.yaml accepted_example null — 실사례 없음"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "권장-03",
+      "score": 0,
+      "confidence": "low",
+      "review_recommended": true,
+      "evidence": [
+        {
+          "text": "자자와 약정한 특정 의무 조항을 고의적이고 악의적인 목적으로 중대하게 위반 시 투자원금(2,809,351백만원)에 대하여 매수청구권 행사가격으로 투자자 보유주식을 최대주주에게 매각할 수 있는 권리 연결실체는 상기 투자자의 동반매도요구권(Drag-Along right) 및 최대주주의 주식매도청구권(Call Option)등 주주간 계약에 포함된 권리들에 대하여 당3분기말 현재 파생금융상품부채 487,006백만원을 인식하였습니다(주석16 참조). 또한, 지배기업은 종속기업인 에스케이온㈜의 신주인수계약과 관련하여 2024년 9월 30일자로 에스케이온㈜ 주식 18,031,337주에 대하여 주식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 구 분 주가수익스왑계약 투자자 에 당3분기말 현재 파생금융상품부채 487,006백만원을 인식하였습니다(주석16 참조). 또한, 지배기업은 종속기업인 에스케이온㈜의 신주인수계약과 관련하여 2024년 9월 30일자로 에스케이온㈜ 주식 18,031,337주에 대하여 주식의 매수인과 조건에 따른 차액을 상호간 정산하는 PRS(주가수익스왑) 약정을 체결하였습니다. 구 분 주가수익스왑계약 투자자 에스프로젝트이노 주식회사 등 대상주식수 18,031,337주 효력 발생일 2024년 10월 15일 만기일 2027년 10월 15일 계약내용 매수자의 기초자산 매각시 매각금액과 정산금액과의 차액을 수수함 또한, 종속기업인 에스케이지오센트릭㈜는 ㈜삼양패키징(이하 \"전략적 제휴사\")으로부터 전략적 제휴사의 자회사인 ㈜삼양에코테크(이하 \"합작사\")에 대한 주식매도청 스프로젝트이노 주식회사 등 대상주식수 18,031,337주 효력 발생일 2024년 10월 15일 만기일 2027년 10월 15일 계약내용 매수자의 기초자산 매각시 매각금액과 정산금액과의 차액을 수수함 또한, 종속기업인 에스케이지오센트릭㈜는 ㈜삼양패키징(이하 \"전략적 제휴사\")으로부터 전략적 제휴사의 자회사인 ㈜삼양에코테크(이하 \"합작사\")에 대한 주식매도청구권을 부여 받았습니다. 연결실체는 아래의 사유 중 1개에 해당하는 사유를 포함하여, 법령상 제한 없이 전략적 제휴사가 보유 중인 합작사의 주식 전부 또는 일부를 양도하게 할 수 있게 된 경우전략적 제휴사가 보유하고 있는 합작사의 발행주식총수의 49%를 연결실체 또는 연결실체가 지정하는 계열회사에게 매도하도록 청구할 수 있는 권리를 가지고 있습니다. - 공",
+          "source_document": "분기보고서 (2024.09)",
+          "receipt_no": "20241114001571",
+          "source_location": "매칭 키워드: PRS, 기초자산, 정산금액, 차액"
+        }
+      ],
+      "matched_rules": [
+        "pct_expression"
+      ],
+      "decision_reason": "일부 키워드/패턴이 매치됐으나 이 항목은 rule_status=insufficient_evidence(1·2점 실사례 없음)이므로 임의로 점수를 올리지 않고 0점을 유지함. missing_evidence: 판정 기준(산업 평균 대비 비교 존재 여부)은 명확하나 실제 비교공시 사례가 없음",
+      "rule_basis": [
+        "accepted_example은 표9 가상 사례('산업 평균 7%... 본 거래 8.3%')뿐 — 실제 기업 사례 아님"
+      ],
+      "rule_status": "insufficient_evidence"
+    },
+    {
+      "rubric_id": "권장-04",
+      "score": 0,
+      "confidence": "high",
+      "review_recommended": false,
+      "evidence": [],
+      "matched_rules": [],
+      "decision_reason": "원문에 관련 키워드·패턴이 전혀 없어 0점(근거 없음)으로 판정",
+      "rule_basis": [
+        "rubric.yaml accepted_example null — 실사례 없음"
+      ],
+      "rule_status": "insufficient_evidence"
+    }
+  ],
+  "areas": [
+    {
+      "area_id": "가",
+      "area_name": "기본 거래 정보",
+      "weight": 18.0,
+      "earned": 13.5,
+      "max_possible": 18.0,
+      "unreviewed_item_ids": []
+    },
+    {
+      "area_id": "나",
+      "area_name": "정산 및 회계처리",
+      "weight": 12.0,
+      "earned": 3.0,
+      "max_possible": 12.0,
+      "unreviewed_item_ids": []
+    },
+    {
+      "area_id": "다",
+      "area_name": "투명성 강화(부외부채)",
+      "weight": 45.0,
+      "earned": 0.0,
+      "max_possible": 45.0,
+      "unreviewed_item_ids": []
+    },
+    {
+      "area_id": "라",
+      "area_name": "거래 구조 분류",
+      "weight": 10.0,
+      "earned": 0.0,
+      "max_possible": 10.0,
+      "unreviewed_item_ids": []
+    },
+    {
+      "area_id": "조건부",
+      "area_name": "조건부 필수항목",
+      "weight": 15.0,
+      "earned": 0.0,
+      "max_possible": 15.0,
+      "unreviewed_item_ids": []
+    }
+  ],
+  "total_score": 16.5,
+  "max_score": 100.0,
+  "is_provisional": true,
+  "recommended_met": 0,
+  "recommended_total": 4,
+  "candidates_considered": 13,
+  "candidates_excluded": 7,
+  "excluded_reasons": [
+    "7건은 문서 후보였으나 어떤 항목 규칙과도 매치되지 않아 채택되지 않음"
+  ]
+}
