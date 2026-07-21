@@ -76,7 +76,7 @@ PRSTI/
 ├── rule_based_extractor/  # 규칙 기반 자동 채점 파이프라인(API 미사용)
 ├── evidence_extractor/  # AI 근거 추출(선택적 비교 실험용, 기본 비활성)
 ├── webapp/              # 로컬 웹 애플리케이션(Streamlit)
-├── tests/               # 자동 테스트 59개
+├── tests/               # 자동 테스트 60개
 ├── _workspace/
 │   └── rubric_gaps.md  # 사용자 결정이 필요한 쟁점 기록(현재 전부 해결됨)
 └── 논문 원문·기획초안 (참고자료)

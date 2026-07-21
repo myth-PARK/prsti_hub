@@ -109,6 +109,23 @@ def test_app_renders_without_exception():
     assert "PRSTI" in at.title[0].value
 
 
+def test_app_full_interaction_renders_result_without_exception(monkeypatch):
+    """기업명 입력 -> 분석 버튼 클릭까지 실제 위젯 상호작용을 재현해, 조건부로 그려지는
+    위젯(기간 프리셋)이나 폼 대신 쓴 일반 버튼이 실제로 문제없이 동작하는지 확인한다."""
+    from streamlit.testing.v1 import AppTest
+
+    monkeypatch.setattr(dart_search, "search_company", lambda **kwargs: _fake_dart_result(kwargs["company_name"]))
+
+    at = AppTest.from_file(str(REPO_ROOT / "webapp" / "app.py"))
+    at.run()
+    at.text_input[0].input("한화솔루션")
+    at.button[0].click()
+    at.run()
+
+    assert not at.exception
+    assert len(at.metric) == 2
+
+
 def test_app_imports_when_repo_root_is_not_already_on_sys_path():
     """`streamlit run webapp/app.py`는 webapp/ 폴더만 sys.path에 넣고 저장소 루트는
     넣지 않는다 — pytest(`python -m pytest`)는 저장소 루트를 이미 sys.path에 넣어주므로

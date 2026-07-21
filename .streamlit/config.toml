@@ -1,0 +1,10 @@
+# PRSTI 웹앱 테마 — 회계·신뢰(네이비) + 데이터·기술(블루) + PRS 핵심 포인트(골드) 배색
+[theme]
+primaryColor = "#C9832A"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F1F4F9"
+textColor = "#14213D"
+font = "sans serif"
+
+[client]
+toolbarMode = "minimal"
