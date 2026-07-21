@@ -182,3 +182,27 @@
 - **결정 주체**: [사용자 명시적 지시]
 - **관련 development-log**: DEV-20260720-16
 - **상태**: 확정
+
+## DEC-014: 규칙 기반(rule_based) 완전 자동 채점으로 전환, AI/점수 분리 원칙 재해석
+
+- **일자**: 2026-07-21
+- **배경/문제**: 사용자가 "API 키 없이도 처음부터 끝까지 실행되고, 사람의 점수 입력도 필요 없는 완전 자동 채점 파이프라인"을 명시적으로 요구(전체 프롬프트, §1~14). 기존 구조는 evidence-extractor(AI 제안)→사람 확정→scoring_engine(계산) 3단이었는데, AI 제안 단계가 무과금 원칙(DEC-013)상 계속 보류돼 있어 파이프라인이 사람의 확정 입력을 기다리는 채로 멈춰 있었다.
+- **검토한 대안**: plans/parallel-orbiting-axolotl.md(승인된 계획 문서) §5에 상술. 핵심 선택은 (A) rubric.yaml을 직접 확장 vs (B) 별도 `rubric_rules.yaml`에 기계 규칙을 얹기 — **B 채택**(이미 승인된 v1.0 문서를 흔들지 않기 위함).
+- **최종 결정**: `rule_based_extractor` 패키지(키워드·정규식 기반, Claude API 미사용)를 신설해 `evidence_extractor`(AI, 이제 `anthropic_extractor.py`로 격리)를 대체하는 기본 실행 경로로 삼음. `scoring_engine`은 변경 없이 재사용 — 규칙 엔진이 낸 점수를 `confirmed_score` 자리에 그대로 공급.
+- **원칙 재해석**: 원 프롬프트의 "AI는 최종 점수를 정하지 않는다"는 **생성형 AI(LLM)의 비결정적 판단**을 사람이 확인하기 전까지 최종으로 쓰지 않는다는 뜻이었다고 해석한다. `rule_based_extractor`는 LLM이 아니라 재현 가능한 결정론적 코드(같은 입력→항상 같은 출력)이므로, 그 출력을 바로 최종 계산에 써도 이 원칙과 충돌하지 않는다고 판단했다. 다만 "사람이 다시 봐야 하는 정도"는 없애지 않고 `confidence`·`review_recommended` 필드로 계승했다 — 특히 19개 항목 중 9개(47%)는 `rule_status: insufficient_evidence`로 표시해, 1·2점 실사례가 없는 항목은 매치가 있어도 임의로 점수를 올리지 않고 0점 + 검토 권고로 유지한다(§3, plans 문서 참고).
+- **비용 통제 구현**: `prsti_common/config.py`의 `ALLOW_PAID_API`(기본 false)·`PRSTI_SCORING_PROVIDER`(기본 "rule_based"). `anthropic_extractor.py`는 SDK 설치·API 키 존재와 별개로 `ALLOW_PAID_API=true`가 아니면 `PaidApiDisabledError`로 즉시 차단(3중 게이트). 테스트로 "rule_based_extractor를 서브프로세스에서 단독 import해도 anthropic 모듈이 로드되지 않음"을 검증(`tests/test_rule_based_extractor.py`).
+- **결정 주체**: [사용자 명시적 지시 — 전체 요구사항 프롬프트] + [AI 판단 — 원칙 재해석 및 파일 분리 방식은 plan 승인으로 확인받음]
+- **관련 development-log**: DEV-20260721-03
+- **상태**: 확정
+
+## DEC-015: rubric.yaml accepted_example 2건의 오류 발견 (수정은 별도 승인 대기)
+
+- **일자**: 2026-07-21
+- **배경/문제**: DEC-014 작업의 사전 조사(plans/parallel-orbiting-axolotl.md §2·§4) 중 논문 원문을 처음부터 끝까지 재확인하면서, `rubric.yaml`의 accepted_example 2건이 부정확함을 발견했다.
+- **발견 1(조건부-01)**: 현재 accepted_example "정기적으로 매년 4% 지급..."은 논문이 "예를 들어 ... 이렇게 공시할 수 있을 것이다"라며 제시한 **가상 예시 문구**였다(실제 기업 사례 아님). 같은 논문 3절에 **실제 사례**("SK이노베이션이 자회사 SK온 유상증자에 연 5% IRR 보장")가 있는데도 지금까지 인용되지 않고 있었다.
+- **발견 2(권장-01)**: 현재 accepted_example "표A3·A4(LG화학·에코프로 재무지표)" 중 표A3는, **필수-08의 counter_example에서는 "신용평가사의 외부 분석이라 근거 불인정(DEC-007)"이라고 이미 명시한 바로 그 자료**다. 같은 자료를 한쪽 항목에서는 배제하고 다른 항목에서는 인정하는 내부 모순이 존재한다.
+- **검토한 대안**: (A) 이번 작업에서 바로 rubric.yaml 수정  (B) 발견 사실만 기록하고 수정은 별도 사용자 확인 후 진행
+- **최종 결정**: B — **rubric.yaml은 이미 사용자가 승인한 v1.0 문서이므로, 발견한 오류라 해도 이번 rule_based 전환 작업 범위에서 임의로 고치지 않는다.** `rubric_rules.yaml`(신규 파일)에는 올바른 근거(SK이노베이션 실제 사례 등)를 이미 반영했지만, rubric.yaml 자체의 accepted_example 필드 수정은 사용자에게 별도로 확인받는다.
+- **결정 주체**: [AI 발견, 수정 여부는 사용자 확인 대기]
+- **관련 development-log**: DEV-20260721-03
+- **상태**: **미해결 — 사용자 확인 필요**(rubric.yaml의 조건부-01·권장-01 accepted_example을 지금 수정할지)

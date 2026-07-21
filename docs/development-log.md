@@ -145,6 +145,19 @@
 - **상태**: [구현됨](scoring_engine은 실제 API 호출이 전혀 없는 컴포넌트라 "코드 완성 + 실제 실행 검증"까지 완전히 도달함 — evidence-extractor와 달리 라이브/목 구분 자체가 필요 없음)
 - **관련 항목**: DEC-013
 
+## DEV-20260721-03: 규칙 기반(rule_based) 완전 자동 채점 파이프라인 구현
+
+- **일시**: 2026-07-21
+- **한 일**: 사용자가 "API 키 없이도 처음부터 끝까지 실행되는 완전 자동 채점 파이프라인"을 상세 스펙(14개 절)으로 요구. 플랜 모드로 전환해 먼저 저장소 전체(논문 원문 735줄 재확인, scoring-methodology.md, rubric.yaml, 논문 인용 샘플, `_workspace/dart_한화솔루션_2025.json` 29건, 기존 evidence_extractor 코드·테스트)를 조사하고, 19개 항목 전체를 confirmed(2)/provisional(8)/insufficient_evidence(9)로 분류한 분석 보고서를 `plans/parallel-orbiting-axolotl.md`에 작성해 사용자 승인을 받았다(DEC-014). 조사 중 rubric.yaml accepted_example 2건의 오류를 발견(DEC-015, 수정은 별도 승인 대기).
+
+  승인된 계획대로: (1) `prsti_common/config.py`(ALLOW_PAID_API 기본 false, PRSTI_SCORING_PROVIDER 기본 rule_based) 신설. (2) 기존 `evidence_extractor/extractor.py`의 Claude API 호출부를 `anthropic_extractor.py`로 이관하고 `PaidApiDisabledError` 게이트 추가(SDK 설치·API 키와 별개인 3번째 게이트) — `verify_quotes()`는 AI/규칙 공용 유틸로 남김. (3) `rubric/rubric_rules.yaml` 신규 작성 — rubric.yaml(승인된 배점)은 건드리지 않고 19개 항목의 키워드·정규식·rule_status·rule_basis만 별도 파일에 추가. (4) `rule_based_extractor` 패키지(rules/extractor/scorer/pipeline/cli) 구현 — `dart_researcher`가 이미 만드는 raw_excerpt 후보를 재사용해 항목별 키워드·패턴을 탐지하고, `scoring_engine.compute_score()`(기존 코드, 변경 없음)의 `confirmed_score` 자리에 규칙 점수를 직접 공급. (5) `_workspace/dart_한화솔루션_2025.json`(원본, 수정 안 함)을 파생 처리해 `_workspace/derived/scored_한화솔루션_2025.json` 생성 — 총점 30.75/100(잠정치, insufficient_evidence 항목 존재), 필수-03·필수-10이 confirmed 규칙으로 2점 자동 판정됨(둘 다 한화솔루션 실 DART 원문 근거 포함).
+
+  구현 중 "문서 후보 중 첫 번째로 매치된 것을 채택"하던 초기 로직이 리스트 뒤쪽에 있는 더 강한 증거(예: 필수-05의 정산 공식 전문)를 놓치는 문제를 발견해, "매치된 패턴 개수가 더 많은 후보를 우선 채택"하도록 수정(TS-004). 전체 테스트 50개(신규 21개 포함) 작성, 전부 통과 — `rule_based_extractor`를 서브프로세스에서 단독 import해도 anthropic 모듈이 전혀 로드되지 않음을 별도로 검증.
+- **산출물**: `plans/parallel-orbiting-axolotl.md`(승인된 분석·계획 문서), `prsti_common/config.py`, `evidence_extractor/anthropic_extractor.py`(신규, 기존 extractor.py에서 이관), `evidence_extractor/extractor.py`(verify_quotes만 남김), `rubric/rubric_rules.yaml`, `rule_based_extractor/`(6개 파일), `tests/test_anthropic_extractor.py`(신규, 기존 API 테스트 이관), `tests/test_rule_based_extractor.py`(신규), `_workspace/derived/scored_한화솔루션_2025.json`
+- **관련 커밋**: (다음 커밋에 포함 예정)
+- **상태**: [구현됨·무과금 실행 검증 완료](19개 항목 중 10개는 confirmed/provisional 규칙으로 자동 판정 가능, 9개는 rule_status=insufficient_evidence로 정직하게 0점+검토권고 유지 — "정확도" 주장은 하지 않음, §11·§12 한계 그대로 유지)
+- **관련 항목**: DEC-014, DEC-015
+
 ## DEV-20260721-01: 논문 부록 사례 6개 기업 보완 (TS-001 완전 해결)
 
 - **일시**: 2026-07-21

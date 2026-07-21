@@ -1,13 +1,15 @@
-"""CLI 진입점.
+"""CLI 진입점 — 선택적 비교 실험용(Claude API 호출, 유료).
+
+기본 채점 경로가 아니다. 무료 자동 채점은 `python -m rule_based_extractor.cli`를 쓴다.
 
 사용법:
-    python -m evidence_extractor.cli <input.json> <output.json> [--rubric PATH] [--model ID]
+    ALLOW_PAID_API=true python -m evidence_extractor.cli <input.json> <output.json> [--rubric PATH] [--model ID]
 
 input.json 형식:
     {"company": "...", "source_doc": "...", "raw_excerpt": "..."}
 
-ANTHROPIC_API_KEY 환경변수와 anthropic 패키지 설치가 필요하다(둘 다 이 저장소에는
-포함되어 있지 않다 — extractor.py의 MissingSDKError / MissingAPIKeyError 참고).
+ANTHROPIC_API_KEY 환경변수·anthropic 패키지 설치·ALLOW_PAID_API=true가 모두 필요하다
+(anthropic_extractor.py의 PaidApiDisabledError / MissingSDKError / MissingAPIKeyError 참고).
 """
 
 from __future__ import annotations
@@ -17,7 +19,7 @@ import json
 import sys
 from pathlib import Path
 
-from .extractor import run_extraction
+from .anthropic_extractor import run_extraction
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_RUBRIC_PATH = REPO_ROOT / "rubric" / "rubric.yaml"

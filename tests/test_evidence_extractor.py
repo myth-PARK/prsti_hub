@@ -1,20 +1,17 @@
-"""evidence_extractor 테스트.
+"""evidence_extractor 공용부 테스트 (rubric_loader/prompts/verify_quotes).
 
-rubric_loader / prompts / verify_quotes는 anthropic 패키지나 ANTHROPIC_API_KEY 없이
-그대로 실행된다. extract_evidence()의 API 호출부만 unittest.mock으로 anthropic
-클라이언트를 대체해 검증한다 — 실제 네트워크 호출은 발생하지 않는다.
+이 파일은 provider(anthropic vs rule_based)와 무관한 부분만 다룬다 — anthropic 패키지나
+API 키 없이 그대로 실행된다. Claude API 호출 자체의 테스트는
+tests/test_anthropic_extractor.py를 본다.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
 
 from evidence_extractor import extractor
 from evidence_extractor.prompts import build_user_prompt
-from evidence_extractor.schema import ExtractedItem, ExtractionResult
+from evidence_extractor.schema import ExtractedItem
 from prsti_common.rubric_loader import load_items as load_rubric
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -63,7 +60,7 @@ def test_prompt_contains_company_and_excerpt_and_item_ids():
         assert item.id in prompt
 
 
-# ---------- verify_quotes (환각 방지 안전망) ----------
+# ---------- verify_quotes (환각 방지 안전망, AI/규칙 공용) ----------
 
 
 def test_valid_quote_passes_through_unchanged():
@@ -131,97 +128,3 @@ def test_not_found_items_pass_through_untouched():
     result = extractor.verify_quotes(raw, [item])
     assert result[0].rationale == "언급 없음"
     assert result[0].status == "not_found"
-
-
-# ---------- extract_evidence: 에러 핸들링 ----------
-
-
-def test_raises_missing_sdk_error_when_anthropic_not_installed():
-    with patch.object(extractor, "anthropic", None):
-        with pytest.raises(extractor.MissingSDKError):
-            extractor.extract_evidence(
-                company="테스트기업",
-                source_doc="테스트문서",
-                raw_excerpt="x",
-                items=load_rubric(RUBRIC_PATH)[:1],
-            )
-
-
-def test_raises_missing_api_key_error_when_env_var_unset(monkeypatch):
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    fake_anthropic = MagicMock()
-    with patch.object(extractor, "anthropic", fake_anthropic):
-        with pytest.raises(extractor.MissingAPIKeyError):
-            extractor.extract_evidence(
-                company="테스트기업",
-                source_doc="테스트문서",
-                raw_excerpt="x",
-                items=load_rubric(RUBRIC_PATH)[:1],
-            )
-
-
-# ---------- extract_evidence: API 호출 배선 + 환각 검증 통합 ----------
-
-
-def test_extract_evidence_applies_hallucination_check_to_api_response(monkeypatch):
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake-key-not-real")
-
-    raw_excerpt = "계약규모는 1조원이며 부채총계 대비 5%이다."
-    fake_item = ExtractedItem(
-        item_id="필수-01",
-        status="found",
-        quote="원문에 없는 인용문",
-        source_location="본문",
-        suggested_score=2,
-        confidence="high",
-        rationale="모델이 주장한 근거",
-    )
-    fake_response = MagicMock()
-    fake_response.parsed_output = ExtractionResult(items=[fake_item])
-
-    fake_client = MagicMock()
-    fake_client.messages.parse.return_value = fake_response
-
-    fake_anthropic_module = MagicMock()
-    fake_anthropic_module.Anthropic.return_value = fake_client
-
-    with patch.object(extractor, "anthropic", fake_anthropic_module):
-        result = extractor.extract_evidence(
-            company="테스트기업",
-            source_doc="테스트문서",
-            raw_excerpt=raw_excerpt,
-            items=load_rubric(RUBRIC_PATH)[:1],
-        )
-
-    fake_client.messages.parse.assert_called_once()
-    call_kwargs = fake_client.messages.parse.call_args.kwargs
-    assert call_kwargs["output_format"] is ExtractionResult
-    assert call_kwargs["model"] == extractor.DEFAULT_MODEL
-
-    # raw_excerpt에 없는 quote이므로 not_found로 강제 하향되어야 한다
-    assert result[0].status == "not_found"
-    assert result[0].suggested_score == 0
-    assert "자동 검증 실패" in result[0].rationale
-
-
-def test_extract_evidence_raises_when_model_output_fails_schema(monkeypatch):
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test-fake-key-not-real")
-
-    fake_response = MagicMock()
-    fake_response.parsed_output = None
-    fake_response.stop_reason = "refusal"
-
-    fake_client = MagicMock()
-    fake_client.messages.parse.return_value = fake_response
-
-    fake_anthropic_module = MagicMock()
-    fake_anthropic_module.Anthropic.return_value = fake_client
-
-    with patch.object(extractor, "anthropic", fake_anthropic_module):
-        with pytest.raises(RuntimeError):
-            extractor.extract_evidence(
-                company="테스트기업",
-                source_doc="테스트문서",
-                raw_excerpt="x",
-                items=load_rubric(RUBRIC_PATH)[:1],
-            )
