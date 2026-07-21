@@ -1,46 +1,52 @@
-# PRSTI 루브릭 — Phase 0 초안
-# 상태: draft (사용자 승인 전. area weight/proposed_weight는 전부 null)
+# PRSTI 루브릭 — Phase 0
+# 상태: approved-pending-validation (배점 확정, 시범 기업 채점 검증 전)
 # 근거: 최아리 외(2026), 한국회계학회지 35(3), 표6~8
 # 이 파일의 항목별 판정기준 서술은 docs/scoring-methodology.md에서 가져온 것이며,
 # 그 문서가 "왜 이 기준인가"의 설명을 담고 있다. 이 파일은 기계가 읽는 축약판이다.
 
-rubric_version: "0.1-draft"
-status: "draft"
+rubric_version: "1.0"
+status: "approved-pending-validation"
 scale_note: >
   0/1/2점 척도는 PRSTI가 새로 설계한 것이며 논문 표10의 ○(1)/△(0.5)/✕(0) 실증채점
   척도를 그대로 이식한 것이 아니다. docs/scoring-methodology.md 상단 참고.
+scoring_formula: >
+  항목점수 = (raw_score / 2) × proposed_weight. 영역점수 = 그 영역 소속 항목점수의 합.
+  총점 = 모든 영역점수의 합(0~100). 권장항목은 총점에 포함되지 않고 "n/4 충족" 배지로만 표시.
 
-# 2026-07-20 사용자 확정 사항(decision-log.md DEC-002/005/006/007 참고). 배점(weight)은 여전히 미확정.
+# 2026-07-20 사용자 확정 사항(decision-log.md DEC-002/005/006/007/010 참고).
 confirmed_decisions:
   - "영역 구조는 논문 원 카테고리(가/나/다/라+조건부+권장)를 그대로 채택 (DEC-002)"
   - "논문 미출처 3항목(PRS명칭·공시위치·진성매각판단)은 채점 항목에서 제외 유지 (DEC-006)"
   - "조건부 필수항목의 '조건 비해당 명시'는 auto_max(만점) 처리 (DEC-005)"
   - "발행회사 자신의 공시만 근거로 인정, 신용평가사 등 제3자 분석 자료는 불인정 (DEC-007)"
+  - "조건부 필수는 100점 배점에 포함, 권장항목은 배점 없이 참고 배지로만 표시 (DEC-010)"
+  - "카테고리 배점은 논문 강조점 반영안(안 B) 채택 후 '라' 단일항목 집중도 완화를 위해 재조정: 가18·나12·다45·라10·조건부15 (DEC-010)"
+  - "카테고리 내 개별 항목은 균등 배점 (DEC-010)"
 
 areas:
   - id: "가"
     name: "기본 거래 정보"
-    weight: null   # 미확정 — rubric_gaps.md #1
+    weight: 18   # 잠정(DEC-010) — 시범 채점 검증 후 조정 가능
     items: ["필수-01", "필수-02", "필수-03", "필수-04"]
   - id: "나"
     name: "정산 및 회계처리"
-    weight: null
+    weight: 12   # 잠정(DEC-010)
     items: ["필수-05", "필수-06"]
   - id: "다"
     name: "투명성 강화(부외부채)"
-    weight: null
+    weight: 45   # 잠정(DEC-010, 2026-07-20 재조정) — 라에서 흡수한 10점 포함
     items: ["필수-07", "필수-08", "필수-09", "필수-10", "필수-11"]
   - id: "라"
     name: "거래 구조 분류"
-    weight: null
+    weight: 10   # 잠정(DEC-010, 2026-07-20 재조정: 20→10) — 단일 항목 집중도가 과해 축소. 표10 기준 10개 기업 전원 이 항목 미공시
     items: ["필수-12"]
   - id: "조건부"
     name: "조건부 필수항목"
-    weight: null
+    weight: 15   # 잠정(DEC-010)
     items: ["조건부-01", "조건부-02", "조건부-03"]
   - id: "권장"
     name: "권장항목"
-    weight: null
+    weight: null   # 배점 없음(DEC-010) — 총점 미포함, "n/4 충족" 참고 배지로만 표시
     items: ["권장-01", "권장-02", "권장-03", "권장-04"]
 
 items:
@@ -57,8 +63,8 @@ items:
     accepted_example: "논문 표2: 10개 기업 전원 계약규모 구체적 금액 확인(예: LG화학 2조원)"
     counter_example: null
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 4.5
+    status: "approved-pending-validation"
 
   - id: "필수-02"
     tier: "mandatory"
@@ -72,8 +78,8 @@ items:
     accepted_example: null
     counter_example: "표10: 한화솔루션·에코프로 미공시(✕), LG화학 부분공시(△)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 4.5
+    status: "approved-pending-validation"
 
   - id: "필수-03"
     tier: "mandatory"
@@ -87,8 +93,8 @@ items:
     accepted_example: null
     counter_example: "표10: LG화학·에코프로·효성화학·넷마블 미공시(✕)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 4.5
+    status: "approved-pending-validation"
 
   - id: "필수-04"
     tier: "mandatory"
@@ -102,8 +108,8 @@ items:
     accepted_example: "한화솔루션(논문 부록 A1): 'Q Energy Solutions SE 보통주 2,784,293주(22.65%)를 제3자에 매각'"
     counter_example: null
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 4.5
+    status: "approved-pending-validation"
 
   # ---------- 나. 정산 및 회계처리 ----------
   - id: "필수-05"
@@ -118,8 +124,8 @@ items:
     accepted_example: null
     counter_example: null
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 6
+    status: "approved-pending-validation"
 
   - id: "필수-06"
     tier: "mandatory"
@@ -133,8 +139,8 @@ items:
     accepted_example: "논문 표9 모범안: 'K-IFRS 제1109호(금융상품) 준용... 모회사의 IRR 보장으로 인해 실질적 차입거래 성격을 가집니다. 따라서 파생상품을 금융부채로 분류'"
     counter_example: "표10: 두산로보틱스·금호건설 제외 8개 기업 전원 미공시(✕)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 6
+    status: "approved-pending-validation"
 
   # ---------- 다. 투명성 강화(부외부채) ----------
   - id: "필수-07"
@@ -149,8 +155,8 @@ items:
     accepted_example: null
     counter_example: "표10: 10개 기업 전원 미공시(✕)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 9
+    status: "approved-pending-validation"
 
   - id: "필수-08"
     tier: "mandatory"
@@ -164,8 +170,8 @@ items:
     accepted_example: null
     counter_example: "표10: 10개 기업 전원 미공시(✕). 논문 부록 표A3(LG화학)은 유사 형태이나 신용평가사의 외부 분석이지 자사 공시가 아니므로 근거로 인정하지 않음(2026-07-20 사용자 확정, decision-log DEC-007 — 발행회사 자신의 공시만 인정)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 9
+    status: "approved-pending-validation"
 
   - id: "필수-09"
     tier: "mandatory"
@@ -179,8 +185,8 @@ items:
     accepted_example: null
     counter_example: "표10: 금호건설 미공시(✕), 나머지(두산로보틱스 제외) 부분공시(△)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 9
+    status: "approved-pending-validation"
 
   - id: "필수-10"
     tier: "mandatory"
@@ -194,8 +200,8 @@ items:
     accepted_example: "한화솔루션(표10 유일 ○ 사례)"
     counter_example: "표10: 나머지 9개 기업 전원 미공시(✕). LG화학은 '셀다운 원치 않는다'는 입장을 증권사에 밝혔음에도 공시에 미반영(부록 사례2)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 9
+    status: "approved-pending-validation"
 
   - id: "필수-11"
     tier: "mandatory"
@@ -209,8 +215,8 @@ items:
     accepted_example: null
     counter_example: "표10: 10개 기업 전원 미공시(✕)"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 9
+    status: "approved-pending-validation"
 
   # ---------- 라. 거래 구조 분류 ----------
   - id: "필수-12"
@@ -225,8 +231,8 @@ items:
     accepted_example: null
     counter_example: "표10: 10개 기업 전원 미공시(✕) — 부채성/자본성 분류의 근간이 되는 핵심 신설 항목"
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 10
+    status: "approved-pending-validation"
 
   # ---------- 조건부 필수항목 ----------
   - id: "조건부-01"
@@ -242,8 +248,8 @@ items:
     accepted_example: "논문 5.2.1절: '정기적으로 매년 4% 지급(PRS 이자)과 만기 일시 지급 0.8%로 병합하여 이행'"
     counter_example: null
     na_rule: "auto_max — 조건 비해당(가격보전조건 없음)을 명시적으로 밝힌 경우 만점 처리. 2026-07-20 사용자 확정(decision-log DEC-005)"
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 5
+    status: "approved-pending-validation"
 
   - id: "조건부-02"
     tier: "conditional"
@@ -258,8 +264,8 @@ items:
     accepted_example: "논문 부록 표A2(SK이노베이션 유상증자 자금 이용 결과): 채무상환/운영자금 액수 구분"
     counter_example: null
     na_rule: "auto_max — 조건부-01과 동일 규칙 적용. 2026-07-20 사용자 확정(decision-log DEC-005)"
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 5
+    status: "approved-pending-validation"
 
   - id: "조건부-03"
     tier: "conditional"
@@ -274,8 +280,8 @@ items:
     accepted_example: null
     counter_example: null
     na_rule: "auto_max — 조건부-01과 동일 규칙 적용. 2026-07-20 사용자 확정(decision-log DEC-005)"
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: 5
+    status: "approved-pending-validation"
 
   # ---------- 권장항목 ----------
   - id: "권장-01"
@@ -290,8 +296,8 @@ items:
     accepted_example: "논문 부록 표A3·A4(LG화학·에코프로 재무지표)"
     counter_example: null
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: null   # DEC-010: 권장항목은 배점 없음. raw_score>=1이면 "충족"으로 카운트해 n/4 배지에 반영
+    status: "approved-pending-validation"
 
   - id: "권장-02"
     tier: "recommended"
@@ -305,8 +311,8 @@ items:
     accepted_example: null
     counter_example: null
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: null   # DEC-010: 권장항목은 배점 없음, n/4 배지로만 표시
+    status: "approved-pending-validation"
 
   - id: "권장-03"
     tier: "recommended"
@@ -320,8 +326,8 @@ items:
     accepted_example: "논문 표9 모범안: '2025년 체결된 PRS 거래 57건의 PRS 이자율 평균은 7%... 본 거래는 산업 평균보다 1.3%p 높으며...'"
     counter_example: null
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: null   # DEC-010: 권장항목은 배점 없음, n/4 배지로만 표시
+    status: "approved-pending-validation"
 
   - id: "권장-04"
     tier: "recommended"
@@ -335,8 +341,8 @@ items:
     accepted_example: null
     counter_example: null
     na_rule: null
-    proposed_weight: null
-    status: "draft"
+    proposed_weight: null   # DEC-010: 권장항목은 배점 없음, n/4 배지로만 표시
+    status: "approved-pending-validation"
 
 # 논문에 직접적 채점 항목으로 존재하지 않아 이 초안에서 의도적으로 제외한 후보.
 # 포함 여부는 rubric_gaps.md #4에서 사용자 결정 대기.
