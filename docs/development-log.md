@@ -153,3 +153,14 @@
 - **관련 커밋**: (다음 커밋에 포함 예정)
 - **상태**: [구현됨]
 - **관련 항목**: TS-001
+
+## DEV-20260721-02: dart-researcher 실제 구현 + 한화솔루션 실 데이터 최초 수집
+
+- **일시**: 2026-07-21
+- **한 일**: 사용자가 DART Open API 키를 발급받아 제공(무료 서비스, 과금 없음 — 무과금 개발 원칙과 상충하지 않음). 환경변수(`DART_API_KEY`)로만 저장하고 어떤 파일에도 기록하지 않음. `dart_researcher` 패키지를 신규 구현 — `client.py`(corpCode.xml·list.json·document.xml 3개 DART Open API 엔드포인트 래퍼), `synonyms.py`(논문 4.2절 동의어 사전을 코드로 옮김 — 직접 명칭 5개 + 구조 서술형 5개 그룹 + 위치 마커 1개), `search.py`(슬라이딩 윈도우 키워드 탐지로 raw_excerpt 후보를 찾는 `find_prs_passages`, 기업 1개·기간 1개로 한정된 `search_company` 오케스트레이션), `cli.py`. `tests/test_dart_researcher.py` 6개(mock 기반, 구조 서술형 그룹이 단어 일부만으로는 탐지되지 않는지 — 과다탐지 방지 — 를 포함) 작성, 전체 테스트 29/29 통과.
+
+  이어서 한화솔루션 1개 기업(원 프롬프트의 "대량 수집 금지" 제약에 따라 소량 타겟 조회로 한정)에 대해 **실제 DART API를 처음으로 호출**해 파이프라인 전체(corp_code 조회 → 공시검색 → 원문 다운로드 → 키워드 탐지)를 검증. 2025년 반기보고서([기재정정]반기보고서, rcept_no 20250814003624)에서 "매매수익스왑(PRS) 약정에 대한 설명 회사는 종속기업인 Q Energy Solutions SE 보통주 2,78..."로 시작하는 실제 공시 원문을 확인 — 이는 `rubric.yaml` 필수-04 `accepted_example`이 이미 인용하고 있던 문장과 정확히 일치해, 논문 인용이 실제 공시와 부합함을 교차 검증한 셈이 됨. 총 29개 후보 구간을 `_workspace/dart_한화솔루션_2025.json`에 저장(dart-researcher.md 출력 스키마 그대로).
+- **산출물**: `dart_researcher/__init__.py`, `client.py`, `synonyms.py`, `search.py`, `cli.py`, `tests/test_dart_researcher.py`, `_workspace/dart_한화솔루션_2025.json`(실제 DART 데이터, 논문 인용 샘플 아님)
+- **관련 커밋**: (다음 커밋에 포함 예정)
+- **상태**: [구현됨·실 데이터 검증 완료] — DART 연동은 evidence_extractor와 달리 무료라 라이브 검증까지 완료. 다음 단계(이 실제 raw_excerpt를 evidence_extractor에 넣어 근거를 추출하는 것)는 여전히 Claude API 호출이 필요해 무과금 원칙(DEC-013)상 보류 중.
+- **관련 항목**: DEC-013
