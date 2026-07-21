@@ -1,0 +1,5 @@
+# evidence-extractor 실행에 필요한 런타임 의존성
+# 설치 전 사용자 승인 필요 항목: anthropic (원 프롬프트의 "새 라이브러리 도입" 승인 게이트 대상 — 2026-07-20 기준 미설치)
+anthropic>=0.68.0
+pyyaml>=6.0
+pydantic>=2.0

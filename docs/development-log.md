@@ -126,3 +126,12 @@
 - **관련 커밋**: (다음 커밋에 포함 예정)
 - **상태**: [구현됨](배점 잠정 확정 + 검증 계산 완료. 실제 채점 코드는 여전히 미구현)
 - **관련 항목**: DEC-010
+
+## DEV-20260720-15: evidence-extractor 실제 코드 최초 구현
+
+- **일시**: 2026-07-20
+- **한 일**: `evidence_extractor/` 파이썬 패키지를 신규 작성 — `rubric_loader.py`(rubric.yaml → 19개 항목 구조체), `schema.py`(Pydantic 구조화 출력 모델), `prompts.py`(`.claude/agents/evidence-extractor.md`의 작업원칙을 그대로 시스템 프롬프트로 고정), `extractor.py`(Claude API 호출 + `verify_quotes()` 전수 환각 검증), `cli.py`(실행 진입점). 착수 전 진단으로 `ANTHROPIC_API_KEY` 미설정·`anthropic` 패키지 미설치를 확인(`pyyaml`·`pydantic`·`pytest`는 이미 설치돼 있어 추가 승인 불필요)했으며, 이는 별도 승인 대기 상태로 남김(DEC-012). `rubric.yaml`의 실제 `accepted_example` 인용문(한화솔루션 필수-04, 조건부-01)만 그대로 옮겨 `_workspace/paper_samples/`에 논문 인용 샘플 입력 2건을 생성 — 지어낸 문장은 전혀 포함하지 않음. `tests/test_evidence_extractor.py` 12개 테스트를 작성해 `pytest`로 실행, 전부 통과 확인(루브릭 로더·프롬프트 구성·환각 검증 로직은 실제 실행, API 호출부는 `unittest.mock`으로 배선만 검증 — 실제 네트워크 호출 없음).
+- **산출물**: `evidence_extractor/__init__.py`, `evidence_extractor/rubric_loader.py`, `evidence_extractor/schema.py`, `evidence_extractor/prompts.py`, `evidence_extractor/extractor.py`, `evidence_extractor/cli.py`, `tests/test_evidence_extractor.py`, `_workspace/paper_samples/*.json`(2건)·`README.md`, `requirements.txt`, `requirements-dev.txt`, `.gitignore`(수정)
+- **관련 커밋**: (다음 커밋에 포함 예정)
+- **상태**: [구현됨](코드·테스트는 완성. 단, `anthropic` 미설치·API 키 미설정으로 실제 라이브 API 호출은 아직 한 번도 실행하지 못함 — mock 테스트로만 배선을 검증한 상태이며 이 한계를 숨기지 않고 명시함)
+- **관련 항목**: DEC-009, DEC-011, DEC-012

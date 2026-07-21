@@ -138,3 +138,30 @@
 - **결정 주체**: [사용자 명시적 선택 다수 + AI 제안 1건(라 재조정 방식) 사용자 승인]
 - **관련 development-log**: DEV-20260720-14
 - **상태**: **확정**. AI가 "카테고리 강조가 지금 표본에서는 순위 변별에 별 기여를 못 한다"는 트레이드오프를 제기했고, 사용자가 "b안으로 가자, 우리 크게 봐야제"라며 안 B(논문 강조점 반영)를 재확인 — 이 지표의 주된 목적이 "기업 간 순위 변별"보다 "기업별 개선 우선순위 신호"에 있다는 해석을 확정한 것. `rubric.yaml` status를 `approved-pending-validation` → `approved`로 승격. 여전히 조정 가능한 기준선이나, 배점 철학 자체는 재논의 없이 이대로 간다.
+
+## DEC-011: evidence-extractor 구현 방식 — 구조화 출력(`output_config.format`) + 코드 측 전수 환각 검증
+
+- **일자**: 2026-07-20
+- **배경/문제**: DEC-009로 evidence-extractor를 최우선 개발 대상으로 확정한 뒤, 실제 코드를 작성하며 두 가지를 기술적으로 정해야 했다: (1) LLM 출력을 JSON 스키마에 강제하는 방법(forced tool_choice vs 구조화 출력), (2) "quote가 원문에 실제로 존재하는지"를 누가·언제 검증하는가.
+- **검토한 대안**:
+  | 쟁점 | 대안 | 채택 |
+  |---|---|---|
+  | JSON 강제 방식 | (A) `tool_choice`로 도구 호출을 강제해 그 입력을 결과로 씀 (B) `output_config.format`/`client.messages.parse()`로 structured output 사용 | **B** |
+  | 환각 검증 시점 | (A) `prsti-auditor`의 사후 표본 검증에만 의존 (B) `evidence-extractor` 코드 자체가 매 응답마다 quote를 raw_excerpt와 전수 대조 | **B(추가), A는 유지** |
+- **결정 근거**:
+  1. 이 작업은 열린 도구 호출(에이전트 루프)이 아니라 "텍스트 하나 → 구조화된 판정 목록 하나"의 단발성 추출이다. `tool_choice`는 도구를 통해 부수효과를 실행하는 상황에 적합하고, 순수 데이터 추출에는 구조화 출력이 스키마 위반 자체를 서버 단에서 차단하므로 더 직접적이다.
+  2. `prsti-auditor`의 무작위 표본 검증은 사후·비용 통제용으로 남겨두되, "인용 없는 점수는 없다"는 하드 룰은 표본이 아니라 매 건 전수 검증이어야 한다고 판단 — `evidence_extractor/extractor.py`의 `verify_quotes()`가 `suggested_score > 0`인 모든 항목에 대해 `quote in raw_excerpt` 문자열 대조를 수행하고, 실패 시 `not_found`/`suggested_score=0`으로 강제 하향한다(모델의 confidence·rationale과 무관하게).
+- **결정 주체**: [AI 판단] — 사용자가 "다음 차례 시작해보자"고 개발 착수를 승인한 것을 실행 방식에 대한 위임으로 해석. 구체적 기술 선택 자체는 사용자에게 사전 질문하지 않음(원 프롬프트가 막은 것은 "평가 항목·가중치 확정"과 "새 라이브러리 도입"이지, 이미 승인된 기능의 구현 세부는 아니라고 판단).
+- **관련 development-log**: DEV-20260720-15
+- **상태**: 확정(코드에 반영, `tests/test_evidence_extractor.py`로 검증 완료)
+
+## DEC-012: `anthropic` 패키지 설치 및 실제 API 실행은 별도 승인 대기
+
+- **일자**: 2026-07-20
+- **배경/문제**: evidence-extractor 코드를 작성하는 과정에서 `ANTHROPIC_API_KEY`가 어디에도 설정되어 있지 않고(`환경변수/사용자 레지스트리/시스템 레지스트리 전부 없음`) `anthropic` 파이썬 패키지도 설치되어 있지 않음을 확인했다(`pyyaml`·`pydantic`·`pytest`는 이미 Anaconda 배포판에 설치되어 있어 추가 승인 불필요).
+- **검토한 대안**: (A) 사용자 승인 없이 바로 `pip install anthropic` 실행 후 실제 API 호출까지 진행  (B) 코드·테스트는 전부 완성하되, 실제 설치·실행은 승인 후로 미룸
+- **최종 결정**: B
+- **결정 근거**: 원 프롬프트의 명시적 승인 게이트 — "새로운 라이브러리 또는 외부 서비스 도입"은 사용자 승인 필요 — 가 정확히 이 상황(anthropic SDK 도입, 실제 유료 API 호출 개시)에 해당한다고 판단. 코드 자체는 `anthropic` 미설치 상태에서도 정상 import되고, API 호출부만 테스트에서 목(mock) 처리해 실제 설치 없이 배선을 검증했다.
+- **결정 주체**: [AI 판단, 사용자 확인 대기]
+- **관련 development-log**: DEV-20260720-15
+- **상태**: **미해결** — 사용자에게 (1) `pip install anthropic` 실행 승인, (2) `ANTHROPIC_API_KEY` 보유 여부 및 설정 방법 확인이 필요
