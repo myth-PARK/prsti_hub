@@ -90,3 +90,12 @@
 - **관련 커밋**: N/A
 - **상태**: [구현됨]
 - **관련 항목**: DEC-008
+
+## DEV-20260720-11: git 설치 및 GitHub 준비 (목요일 마감 대응)
+
+- **일시**: 2026-07-20
+- **한 일**: 사용자가 "GitHub 산출물은 목요일(2026-07-23)까지만 나오면 된다, 순리대로 가자"고 확인 — winget으로 Git for Windows 2.55.0과 GitHub CLI 2.96.0 설치. git 전역 사용자 정보(이름·이메일) 설정. PRSTI 폴더에 `git init` 후 README.md·.gitignore 작성, 4개 커밋으로 정리(초기자료 → 하네스 → 루브릭/문서 → README). 작업 중 출처 불명 `record/` 폴더(jsPDF로 생성된 8페이지 PDF, VSCode 확장의 자체 내보내기로 추정)를 발견해 커밋에서 제외(.gitignore).
+- **산출물**: `PRSTI/.git/`(로컬 저장소, 커밋 4개), `PRSTI/README.md`, `PRSTI/.gitignore`
+- **관련 커밋**: a401779, ac98391, 4ef6989, 20fa9b6
+- **상태**: [구현됨](로컬 git까지만. GitHub 원격 저장소는 `gh auth login` 인증이 필요해 사용자 몫으로 남김)
+- **관련 항목**: DEC-004, DEC-008
